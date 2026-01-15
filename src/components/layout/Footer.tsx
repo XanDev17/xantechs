@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -15,8 +15,7 @@ const Footer = () => {
               <span className="font-bold text-xl">XANTECHS</span>
             </div>
             <p className="text-background/70 text-sm leading-relaxed">
-              Empowering businesses with cutting-edge retail technology solutions. 
-              From POS systems to cloud-based retail management.
+              We build web apps, software, websites, and landing pages that help businesses grow and succeed in the digital world.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-background/60 hover:text-primary transition-colors">
@@ -26,33 +25,33 @@ const Footer = () => {
                 <Linkedin className="w-5 h-5" />
               </a>
               <a href="#" className="text-background/60 hover:text-primary transition-colors">
-                <Facebook className="w-5 h-5" />
+                <Github className="w-5 h-5" />
               </a>
             </div>
           </div>
 
-          {/* Products */}
+          {/* Services */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg">Products</h4>
+            <h4 className="font-semibold text-lg">Services</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/pos" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  POSXander
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Inventory Management
+                <a href="#services" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Web Applications
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Cloud Analytics
+                <a href="#services" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Custom Software
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Staff Management
+                <a href="#services" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Websites
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Landing Pages
                 </a>
               </li>
             </ul>
@@ -68,18 +67,18 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Careers
+                <a href="#portfolio" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Portfolio
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Blog
-                </a>
+                <Link to="/pos" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  POSXander
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  Partners
+                <a href="#contact" className="text-background/70 hover:text-primary transition-colors text-sm">
+                  Contact
                 </a>
               </li>
             </ul>
@@ -99,7 +98,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-3 text-background/70 text-sm">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
-                <span>123 Tech Plaza, Suite 400<br />San Francisco, CA 94105</span>
+                <span>Remote-first team<br />Available worldwide</span>
               </li>
             </ul>
           </div>

@@ -11,7 +11,8 @@ const Header = () => {
 
   const mainLinks = [
     { href: "#about", label: "About" },
-    { href: "#solutions", label: "Solutions" },
+    { href: "#services", label: "Services" },
+    { href: "#portfolio", label: "Portfolio" },
     { href: "#why-us", label: "Why Us" },
     { href: "#contact", label: "Contact" },
   ];
@@ -71,7 +72,7 @@ const Header = () => {
                   <Button variant="outline">View POSXander</Button>
                 </Link>
                 <a href="#contact">
-                  <Button className="gradient-primary">Get Started</Button>
+                  <Button className="gradient-primary">Start a Project</Button>
                 </a>
               </>
             )}
@@ -125,7 +126,7 @@ const Header = () => {
                     <Button variant="outline" className="w-full">View POSXander</Button>
                   </Link>
                   <a href="#contact" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full gradient-primary">Get Started</Button>
+                    <Button className="w-full gradient-primary">Start a Project</Button>
                   </a>
                 </>
               )}

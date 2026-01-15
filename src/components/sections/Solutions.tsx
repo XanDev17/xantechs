@@ -1,77 +1,77 @@
-import { ShoppingCart, Package, BarChart3, Cloud, Users, Shield } from "lucide-react";
+import { Globe, Smartphone, Layout, Rocket, Database, Wrench } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Solutions = () => {
-  const solutions = [
+  const services = [
     {
-      icon: ShoppingCart,
-      title: "Point of Sale",
-      description: "Fast, reliable POS systems designed for modern retail. Process transactions seamlessly across all devices.",
-      features: ["Quick Checkout", "Multi-payment Support", "Offline Mode"]
+      icon: Globe,
+      title: "Web Applications",
+      description: "Full-stack web apps built with modern technologies. React, Node.js, databases, and cloud deployment.",
+      features: ["React & Next.js", "Backend APIs", "Database Design"]
     },
     {
-      icon: Package,
-      title: "Inventory Management",
-      description: "Real-time inventory tracking with automated reorder alerts. Never run out of stock again.",
-      features: ["Stock Tracking", "Auto-reorder", "Barcode Scanning"]
+      icon: Smartphone,
+      title: "Custom Software",
+      description: "Tailored software solutions designed specifically for your unique business requirements.",
+      features: ["Business Logic", "Integrations", "Automation"]
     },
     {
-      icon: BarChart3,
-      title: "Analytics & Reports",
-      description: "Comprehensive insights into your business performance with customizable dashboards.",
-      features: ["Sales Reports", "Customer Insights", "Trend Analysis"]
+      icon: Layout,
+      title: "Websites",
+      description: "Professional, responsive websites that showcase your brand and convert visitors into customers.",
+      features: ["Responsive Design", "SEO Optimized", "Fast Loading"]
     },
     {
-      icon: Cloud,
-      title: "Cloud Systems",
-      description: "Access your data anywhere, anytime. Secure cloud infrastructure with automatic backups.",
-      features: ["Remote Access", "Auto Backups", "Multi-location Sync"]
+      icon: Rocket,
+      title: "Landing Pages",
+      description: "High-converting landing pages designed to maximize your marketing ROI and capture leads.",
+      features: ["Conversion Focused", "A/B Testing", "Analytics Ready"]
     },
     {
-      icon: Users,
-      title: "Staff Management",
-      description: "Manage your team efficiently with scheduling, performance tracking, and access controls.",
-      features: ["Time Tracking", "Permissions", "Performance Metrics"]
+      icon: Database,
+      title: "SaaS Products",
+      description: "Build your software-as-a-service product from concept to launch with scalable architecture.",
+      features: ["Multi-tenant", "Subscription Billing", "User Management"]
     },
     {
-      icon: Shield,
-      title: "Security & Compliance",
-      description: "Enterprise-grade security ensuring your data and transactions are always protected.",
-      features: ["Data Encryption", "PCI Compliance", "Audit Logs"]
+      icon: Wrench,
+      title: "Maintenance & Support",
+      description: "Ongoing support, updates, and improvements to keep your digital products running smoothly.",
+      features: ["Bug Fixes", "Feature Updates", "Performance Tuning"]
     }
   ];
 
   return (
-    <section id="solutions" className="py-24 bg-secondary/50">
+    <section id="services" className="py-24 bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Solutions</p>
+          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Services</p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Everything You Need to Run Your Retail Business
+            What We Build
           </h2>
           <p className="text-muted-foreground text-lg">
-            Comprehensive solutions designed to streamline operations, boost sales, and grow your business.
+            From simple landing pages to complex enterprise applications, we have the expertise to bring your vision to life.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {solutions.map((solution, index) => (
+          {services.map((service, index) => (
             <Card
               key={index}
               className="group bg-card hover:shadow-card transition-all duration-300 border-border hover:border-primary/30"
             >
               <CardHeader>
                 <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:gradient-primary transition-all duration-300">
-                  <solution.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
+                  <service.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
-                <CardTitle className="text-xl">{solution.title}</CardTitle>
+                <CardTitle className="text-xl">{service.title}</CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  {solution.description}
+                  {service.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {solution.features.map((feature, featureIndex) => (
+                  {service.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                       {feature}
