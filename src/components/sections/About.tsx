@@ -1,26 +1,26 @@
-import { Target, Users, Zap, Award } from "lucide-react";
+import { Code, Palette, Rocket, Users } from "lucide-react";
 
 const About = () => {
   const values = [
     {
-      icon: Target,
-      title: "Mission-Driven",
-      description: "We're committed to democratizing retail technology for businesses of all sizes."
+      icon: Code,
+      title: "Clean Code",
+      description: "We write maintainable, scalable code that stands the test of time."
+    },
+    {
+      icon: Palette,
+      title: "Beautiful Design",
+      description: "Every project features stunning UI/UX that delights users."
+    },
+    {
+      icon: Rocket,
+      title: "Fast Delivery",
+      description: "We ship quality products on time, every time."
     },
     {
       icon: Users,
-      title: "Customer-First",
-      description: "Every feature we build starts with understanding our customers' real needs."
-    },
-    {
-      icon: Zap,
-      title: "Innovation",
-      description: "We constantly push boundaries to deliver cutting-edge solutions."
-    },
-    {
-      icon: Award,
-      title: "Excellence",
-      description: "Quality and reliability are at the core of everything we do."
+      title: "Collaborative",
+      description: "We work closely with you throughout the entire process."
     }
   ];
 
@@ -32,19 +32,17 @@ const About = () => {
             <div className="space-y-4">
               <p className="text-primary font-semibold tracking-wide uppercase text-sm">About XANTECHS</p>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                Transforming Retail with Smart Technology
+                We Turn Ideas Into Digital Reality
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Founded with a vision to revolutionize how retailers operate, XANTECHS has grown 
-                to become a trusted partner for businesses worldwide. Our comprehensive suite of 
-                SaaS solutions covers everything from point-of-sale operations to advanced 
-                inventory management and cloud-based analytics.
+                XANTECHS is a software development agency specializing in building modern 
+                web applications, custom software solutions, stunning websites, and 
+                high-converting landing pages.
               </p>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                With over a decade of experience in retail technology, we understand the unique 
-                challenges businesses face. That's why we've designed our solutions to be 
-                intuitive, scalable, and powerful – helping you focus on what matters most: 
-                growing your business.
+                With a passion for clean code and beautiful design, we partner with 
+                startups, SMBs, and enterprises to create digital products that solve 
+                real problems and drive measurable results.
               </p>
             </div>
           </div>

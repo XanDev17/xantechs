@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -16,49 +15,49 @@ const Hero = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              Trusted by 500+ Retailers
+              Software Development Agency
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-foreground">XANTECHS:</span>{" "}
-              <span className="text-gradient">Smart Retail</span>{" "}
-              <span className="text-foreground">Technology Solutions</span>
+              <span className="text-foreground">We Build</span>{" "}
+              <span className="text-gradient">Digital Products</span>{" "}
+              <span className="text-foreground">That Scale</span>
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              Empowering businesses with cutting-edge retail software. From point-of-sale 
-              to inventory management, we have everything you need to grow.
+              From stunning landing pages to complex web applications, we craft custom 
+              software solutions that drive business growth and user engagement.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="#solutions">
+              <a href="#services">
                 <Button size="lg" className="gradient-primary w-full sm:w-auto group">
-                  Explore Solutions
+                  View Our Services
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </a>
-              <Link to="/pos">
+              <a href="#portfolio">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  <Play className="mr-2 w-4 h-4" />
-                  View POSXander
+                  <Code2 className="mr-2 w-4 h-4" />
+                  See Our Work
                 </Button>
-              </Link>
+              </a>
             </div>
 
             <div className="flex items-center gap-8 pt-4">
               <div className="text-center">
-                <p className="text-3xl font-bold text-foreground">500+</p>
-                <p className="text-sm text-muted-foreground">Active Clients</p>
+                <p className="text-3xl font-bold text-foreground">50+</p>
+                <p className="text-sm text-muted-foreground">Projects Delivered</p>
               </div>
               <div className="w-px h-12 bg-border" />
               <div className="text-center">
-                <p className="text-3xl font-bold text-foreground">99.9%</p>
-                <p className="text-sm text-muted-foreground">Uptime</p>
+                <p className="text-3xl font-bold text-foreground">100%</p>
+                <p className="text-sm text-muted-foreground">Client Satisfaction</p>
               </div>
               <div className="w-px h-12 bg-border" />
               <div className="text-center">
-                <p className="text-3xl font-bold text-foreground">24/7</p>
-                <p className="text-sm text-muted-foreground">Support</p>
+                <p className="text-3xl font-bold text-foreground">5+</p>
+                <p className="text-sm text-muted-foreground">Years Experience</p>
               </div>
             </div>
           </div>
@@ -68,10 +67,10 @@ const Hero = () => {
               <div className="aspect-[4/3] bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center">
                 <div className="text-center p-8">
                   <div className="w-24 h-24 mx-auto mb-6 rounded-2xl gradient-primary flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-4xl">X</span>
+                    <Code2 className="w-12 h-12 text-primary-foreground" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Dashboard Preview</h3>
-                  <p className="text-muted-foreground">Real-time analytics at your fingertips</p>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">Custom Development</h3>
+                  <p className="text-muted-foreground">Tailored solutions for your business</p>
                 </div>
               </div>
             </div>

@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 
 const WhyUs = () => {
   const benefits = [
-    "99.9% uptime guarantee with enterprise-grade reliability",
-    "Seamless integration with existing business systems",
-    "Dedicated 24/7 customer support team",
-    "Regular updates with new features and improvements",
-    "Scalable solutions that grow with your business",
-    "Industry-leading security and data protection",
-    "Intuitive interface requiring minimal training",
-    "Transparent pricing with no hidden fees"
+    "Modern tech stack with React, TypeScript, and Node.js",
+    "Pixel-perfect designs that match your brand identity",
+    "Clean, documented code for easy maintenance",
+    "Agile development with regular progress updates",
+    "Scalable architecture that grows with your business",
+    "End-to-end development from concept to deployment",
+    "Dedicated support even after project delivery",
+    "Transparent pricing with no hidden costs"
   ];
 
   return (
@@ -27,8 +27,8 @@ const WhyUs = () => {
                         1
                       </div>
                       <div>
-                        <p className="font-semibold text-foreground">Easy Setup</p>
-                        <p className="text-sm text-muted-foreground">Get started in minutes</p>
+                        <p className="font-semibold text-foreground">Discovery</p>
+                        <p className="text-sm text-muted-foreground">Understand your goals</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4 p-4 rounded-lg bg-accent/50">
@@ -36,8 +36,8 @@ const WhyUs = () => {
                         2
                       </div>
                       <div>
-                        <p className="font-semibold text-foreground">Configure</p>
-                        <p className="text-sm text-muted-foreground">Customize to your needs</p>
+                        <p className="font-semibold text-foreground">Design & Develop</p>
+                        <p className="text-sm text-muted-foreground">Build your solution</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4 p-4 rounded-lg bg-accent/50">
@@ -45,8 +45,8 @@ const WhyUs = () => {
                         3
                       </div>
                       <div>
-                        <p className="font-semibold text-foreground">Start Selling</p>
-                        <p className="text-sm text-muted-foreground">Watch your business grow</p>
+                        <p className="font-semibold text-foreground">Launch & Support</p>
+                        <p className="text-sm text-muted-foreground">Deploy and maintain</p>
                       </div>
                     </div>
                   </div>
@@ -59,11 +59,11 @@ const WhyUs = () => {
             <div className="space-y-4">
               <p className="text-primary font-semibold tracking-wide uppercase text-sm">Why Choose XANTECHS</p>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                Built for Reliability, Designed for Growth
+                Your Partner in Digital Success
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                We've helped hundreds of businesses streamline their operations and increase 
-                revenue. Here's why leading retailers choose XANTECHS.
+                We've helped startups, agencies, and enterprises build successful digital 
+                products. Here's why clients choose to work with us.
               </p>
             </div>
 
@@ -80,7 +80,7 @@ const WhyUs = () => {
 
             <a href="#contact">
               <Button size="lg" className="gradient-primary group">
-                Start Your Free Trial
+                Start Your Project
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </a>
