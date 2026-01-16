@@ -2,6 +2,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AnimatedBeams from "@/components/ui/AnimatedBeams";
 import CircuitBackground from "@/components/ui/CircuitBackground";
+import Interactive3DCard from "@/components/ui/Interactive3DCard";
 
 const Hero = () => {
   const highlights = [
@@ -83,8 +84,25 @@ const Hero = () => {
           </div>
         </div>
 
+        {/* Interactive 3D Card Section */}
+        <div className="mt-16 max-w-5xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <Interactive3DCard>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-neutral-300">
+                Web Apps
+              </span>
+              <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-neutral-300">
+                Custom Software
+              </span>
+              <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-neutral-300">
+                Landing Pages
+              </span>
+            </div>
+          </Interactive3DCard>
+        </div>
+
         {/* Tech Stack Banner */}
-        <div className="mt-16 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
+        <div className="mt-12 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.5s" }}>
           <div className="relative rounded-2xl border border-border bg-card/50 backdrop-blur-sm p-6 overflow-hidden">
             <div className="absolute inset-0 circuit-dots opacity-30" />
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-4">
