@@ -14,6 +14,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const [headRotation, setHeadRotation] = useState({ x: 0, y: 0 });
   const [armRotation, setArmRotation] = useState({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
   const [fingerCurl, setFingerCurl] = useState(0); // 0 = open, 1 = closed
+  const [elbowBend, setElbowBend] = useState(0); // 0 = straight, higher = more bent
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !robotRef.current) return;
@@ -62,6 +63,10 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     // Finger curl based on distance from robot - closer = more closed fist
     const normalizedDistance = Math.min(1, distance / 300);
     setFingerCurl(1 - normalizedDistance); // Closer = more curled
+    
+    // Elbow bends when arm is raised (negative armY means raised)
+    const elbowBendAmount = Math.max(0, -armY / 60) * 90; // More raised = more bent
+    setElbowBend(elbowBendAmount);
   };
 
   const handleMouseLeave = () => {
@@ -70,6 +75,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     setHeadRotation({ x: 0, y: 0 });
     setArmRotation({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
     setFingerCurl(0);
+    setElbowBend(0);
   };
 
   return (
@@ -313,23 +319,31 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                     borderRadius: "20px"
                   }}
                 />
-                {/* Elbow joint */}
+                {/* Elbow joint + Forearm container - bends when arm raised */}
                 <div 
-                  className="w-7 h-7 rounded-full -mt-1"
+                  className="flex flex-col items-center origin-top"
                   style={{
-                    background: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0)",
-                    boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                    transform: `rotateX(${elbowBend}deg)`,
+                    transition: "transform 0.2s ease-out"
                   }}
-                />
-                {/* Forearm */}
-                <div 
-                  className="w-5 h-16 -mt-1"
-                  style={{
-                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
-                    borderRadius: "15px"
-                  }}
-                />
-                {/* Wrist - rotates with cursor */}
+                >
+                  {/* Elbow joint */}
+                  <div 
+                    className="w-7 h-7 rounded-full -mt-1"
+                    style={{
+                      background: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0)",
+                      boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                    }}
+                  />
+                  {/* Forearm */}
+                  <div 
+                    className="w-5 h-16 -mt-1"
+                    style={{
+                      background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                      borderRadius: "15px"
+                    }}
+                  />
+                  {/* Wrist - rotates with cursor */}
                 <div 
                   className="w-5 h-3 bg-neutral-400 rounded-full"
                   style={{
@@ -470,6 +484,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                     </div>
                   </div>
                 </div>
+                </div>
               </div>
               
               {/* Right Arm - more realistic */}
@@ -496,23 +511,31 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                     borderRadius: "20px"
                   }}
                 />
-                {/* Elbow joint */}
+                {/* Elbow joint + Forearm container - bends when arm raised */}
                 <div 
-                  className="w-7 h-7 rounded-full -mt-1"
+                  className="flex flex-col items-center origin-top"
                   style={{
-                    background: "radial-gradient(circle at 70% 30%, #e0e0e0, #a0a0a0)",
-                    boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                    transform: `rotateX(${elbowBend}deg)`,
+                    transition: "transform 0.2s ease-out"
                   }}
-                />
-                {/* Forearm */}
-                <div 
-                  className="w-5 h-16 -mt-1"
-                  style={{
-                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
-                    borderRadius: "15px"
-                  }}
-                />
-                {/* Wrist - rotates with cursor */}
+                >
+                  {/* Elbow joint */}
+                  <div 
+                    className="w-7 h-7 rounded-full -mt-1"
+                    style={{
+                      background: "radial-gradient(circle at 70% 30%, #e0e0e0, #a0a0a0)",
+                      boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                    }}
+                  />
+                  {/* Forearm */}
+                  <div 
+                    className="w-5 h-16 -mt-1"
+                    style={{
+                      background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                      borderRadius: "15px"
+                    }}
+                  />
+                  {/* Wrist - rotates with cursor */}
                 <div 
                   className="w-5 h-3 bg-neutral-400 rounded-full"
                   style={{
@@ -652,6 +675,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                       />
                     </div>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
