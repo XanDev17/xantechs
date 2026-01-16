@@ -13,6 +13,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
   const [headRotation, setHeadRotation] = useState({ x: 0, y: 0 });
   const [armRotation, setArmRotation] = useState({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
+  const [fingerCurl, setFingerCurl] = useState(0); // 0 = open, 1 = closed
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !robotRef.current) return;
@@ -57,6 +58,10 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     // Y rotation raises arms when cursor is above robot, lowers when below
     const armY = Math.max(-60, Math.min(30, -(deltaY / rect.height) * 80));
     setArmRotation({ leftX: leftArmX, leftY: armY, rightX: rightArmX, rightY: armY });
+    
+    // Finger curl based on distance from robot - closer = more closed fist
+    const normalizedDistance = Math.min(1, distance / 300);
+    setFingerCurl(1 - normalizedDistance); // Closer = more curled
   };
 
   const handleMouseLeave = () => {
@@ -64,6 +69,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     setEyeOffset({ x: 0, y: 0 });
     setHeadRotation({ x: 0, y: 0 });
     setArmRotation({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
+    setFingerCurl(0);
   };
 
   return (
@@ -323,24 +329,145 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                     borderRadius: "15px"
                   }}
                 />
-                {/* Wrist */}
-                <div className="w-4 h-2 bg-neutral-400 rounded-full" />
-                {/* Hand */}
-                <div className="relative">
+                {/* Wrist - rotates with cursor */}
+                <div 
+                  className="w-5 h-3 bg-neutral-400 rounded-full"
+                  style={{
+                    transform: `rotateX(${fingerCurl * 20}deg)`,
+                    transition: "transform 0.15s ease-out"
+                  }}
+                />
+                {/* Hand - palm with articulated fingers */}
+                <div 
+                  className="relative"
+                  style={{
+                    transform: `rotateX(${fingerCurl * 15}deg)`,
+                    transition: "transform 0.15s ease-out"
+                  }}
+                >
+                  {/* Palm */}
                   <div 
-                    className="w-8 h-10 rounded-lg"
+                    className="w-9 h-8 rounded-lg"
                     style={{
                       background: "linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%)",
-                      borderRadius: "30% 30% 40% 40%"
+                      borderRadius: "25% 25% 35% 35%"
                     }}
                   />
-                  {/* Fingers */}
-                  <div className="absolute -bottom-4 left-0 flex gap-0.5">
-                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                  {/* Thumb - separate articulation */}
+                  <div 
+                    className="absolute -left-2 top-2 origin-top-right"
+                    style={{
+                      transform: `rotate(${-30 + fingerCurl * 50}deg)`,
+                      transition: "transform 0.15s ease-out"
+                    }}
+                  >
+                    <div className="w-2 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div 
+                      className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-350 rounded-full -mt-0.5 ml-0.5 origin-top"
+                      style={{
+                        transform: `rotate(${fingerCurl * 40}deg)`,
+                        transition: "transform 0.15s ease-out"
+                      }}
+                    />
+                  </div>
+                  {/* Fingers container */}
+                  <div className="absolute -bottom-1 left-0.5 flex gap-0.5">
+                    {/* Index finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.15s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.15s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.15s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Middle finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.12s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3.5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-3 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.12s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.12s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Ring finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.18s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.18s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.18s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Pinky finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.2s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.2s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-1.5 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.2s ease-out"
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -385,24 +512,145 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                     borderRadius: "15px"
                   }}
                 />
-                {/* Wrist */}
-                <div className="w-4 h-2 bg-neutral-400 rounded-full" />
-                {/* Hand */}
-                <div className="relative">
+                {/* Wrist - rotates with cursor */}
+                <div 
+                  className="w-5 h-3 bg-neutral-400 rounded-full"
+                  style={{
+                    transform: `rotateX(${fingerCurl * 20}deg)`,
+                    transition: "transform 0.15s ease-out"
+                  }}
+                />
+                {/* Hand - palm with articulated fingers */}
+                <div 
+                  className="relative"
+                  style={{
+                    transform: `rotateX(${fingerCurl * 15}deg)`,
+                    transition: "transform 0.15s ease-out"
+                  }}
+                >
+                  {/* Palm */}
                   <div 
-                    className="w-8 h-10 rounded-lg"
+                    className="w-9 h-8 rounded-lg"
                     style={{
                       background: "linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%)",
-                      borderRadius: "30% 30% 40% 40%"
+                      borderRadius: "25% 25% 35% 35%"
                     }}
                   />
-                  {/* Fingers */}
-                  <div className="absolute -bottom-4 left-0 flex gap-0.5">
-                    <div className="w-1.5 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
-                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                  {/* Thumb - separate articulation */}
+                  <div 
+                    className="absolute -right-2 top-2 origin-top-left"
+                    style={{
+                      transform: `rotate(${30 - fingerCurl * 50}deg)`,
+                      transition: "transform 0.15s ease-out"
+                    }}
+                  >
+                    <div className="w-2 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div 
+                      className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-350 rounded-full -mt-0.5 ml-0.5 origin-top"
+                      style={{
+                        transform: `rotate(${-fingerCurl * 40}deg)`,
+                        transition: "transform 0.15s ease-out"
+                      }}
+                    />
+                  </div>
+                  {/* Fingers container */}
+                  <div className="absolute -bottom-1 left-0.5 flex gap-0.5">
+                    {/* Pinky finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.2s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.2s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-1.5 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.2s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Ring finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.18s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.18s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.18s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Middle finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.12s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3.5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-3 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.12s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.12s ease-out"
+                        }}
+                      />
+                    </div>
+                    {/* Index finger */}
+                    <div 
+                      className="flex flex-col items-center origin-top"
+                      style={{
+                        transform: `rotateX(${fingerCurl * 90}deg)`,
+                        transition: "transform 0.15s ease-out"
+                      }}
+                    >
+                      <div className="w-1.5 h-3 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                      <div 
+                        className="w-1.5 h-2.5 bg-gradient-to-b from-neutral-250 to-neutral-350 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 60}deg)`,
+                          transition: "transform 0.15s ease-out"
+                        }}
+                      />
+                      <div 
+                        className="w-1.5 h-2 bg-gradient-to-b from-neutral-300 to-neutral-400 rounded-full -mt-0.5 origin-top"
+                        style={{
+                          transform: `rotateX(${fingerCurl * 45}deg)`,
+                          transition: "transform 0.15s ease-out"
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
