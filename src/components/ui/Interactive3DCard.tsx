@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import robotImage from "@/assets/robot-hero.png";
 
 interface SpotlightCardProps {
   children?: React.ReactNode;
@@ -10,14 +11,11 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const robotRef = useRef<HTMLDivElement>(null);
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
-  const [headRotation, setHeadRotation] = useState({ x: 0, y: 0 });
-  const [armRotation, setArmRotation] = useState({ left: 0, right: 0 });
+  const [robotTransform, setRobotTransform] = useState({ rotateX: 0, rotateY: 0, translateX: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current || !robotRef.current) return;
+    if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const robotRect = robotRef.current.getBoundingClientRect();
     
     // Spotlight position
     setSpotlightPosition({
@@ -25,43 +23,28 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
       y: e.clientY - rect.top,
     });
 
-    // Calculate robot center (head area)
-    const robotCenterX = robotRect.left + robotRect.width / 2;
-    const robotCenterY = robotRect.top + 40;
+    // Calculate center offset
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const deltaX = e.clientX - rect.left - centerX;
+    const deltaY = e.clientY - rect.top - centerY;
 
-    // Calculate offset from robot's perspective
-    const deltaX = e.clientX - robotCenterX;
-    const deltaY = e.clientY - robotCenterY;
-    
-    // Normalize eye movement (max 4px offset)
-    const maxOffset = 4;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const normalizedX = distance > 0 ? (deltaX / distance) * Math.min(distance / 50, 1) * maxOffset : 0;
-    const normalizedY = distance > 0 ? (deltaY / distance) * Math.min(distance / 50, 1) * maxOffset : 0;
-    
-    setEyeOffset({ x: normalizedX, y: normalizedY });
+    // Robot 3D rotation - follows cursor
+    const maxRotation = 15;
+    const rotateY = (deltaX / centerX) * maxRotation;
+    const rotateX = -(deltaY / centerY) * maxRotation * 0.5;
+    const translateX = (deltaX / centerX) * 20;
 
-    // Head rotation (tilt toward cursor)
-    const maxRotation = 20;
-    const rotateY = (deltaX / rect.width) * maxRotation * 2;
-    const rotateX = -(deltaY / rect.height) * maxRotation;
-    
-    setHeadRotation({ 
-      x: Math.max(-maxRotation, Math.min(maxRotation, rotateX)), 
-      y: Math.max(-maxRotation, Math.min(maxRotation, rotateY)) 
+    setRobotTransform({
+      rotateX: Math.max(-maxRotation, Math.min(maxRotation, rotateX)),
+      rotateY: Math.max(-maxRotation, Math.min(maxRotation, rotateY)),
+      translateX: Math.max(-30, Math.min(30, translateX))
     });
-
-    // Arm rotation - arms point toward cursor
-    const leftArmRotation = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 - 20));
-    const rightArmRotation = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 + 20));
-    setArmRotation({ left: leftArmRotation, right: rightArmRotation });
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setEyeOffset({ x: 0, y: 0 });
-    setHeadRotation({ x: 0, y: 0 });
-    setArmRotation({ left: 0, right: 0 });
+    setRobotTransform({ rotateX: 0, rotateY: 0, translateX: 0 });
   };
 
   return (
@@ -74,14 +57,14 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     >
       {/* Spotlight effect that follows mouse */}
       <div
-        className="pointer-events-none absolute rounded-full blur-[80px] transition-opacity duration-300"
+        className="pointer-events-none absolute rounded-full blur-[100px] transition-opacity duration-300"
         style={{
-          width: 300,
-          height: 300,
-          left: spotlightPosition.x - 150,
-          top: spotlightPosition.y - 150,
-          background: "radial-gradient(circle at center, rgba(59, 130, 246, 0.4), rgba(96, 165, 250, 0.15), transparent 70%)",
-          opacity: isHovered ? 1 : 0,
+          width: 400,
+          height: 400,
+          left: spotlightPosition.x - 200,
+          top: spotlightPosition.y - 200,
+          background: "radial-gradient(circle at center, rgba(59, 130, 246, 0.5), rgba(96, 165, 250, 0.2), transparent 70%)",
+          opacity: isHovered ? 1 : 0.3,
         }}
       />
       
@@ -107,115 +90,41 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
           {children}
         </div>
 
-        {/* CSS Robot Figure */}
-        <div className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden">
-          {/* Glow background */}
-          <div className="absolute w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] animate-pulse" />
-          
-          {/* Robot figure - upper body only */}
+        {/* Robot Image with 3D effect */}
+        <div 
+          ref={robotRef}
+          className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden"
+          style={{ perspective: "1000px" }}
+        >
+          {/* Glow behind robot */}
           <div 
-            ref={robotRef}
-            className="relative" 
-            style={{ perspective: "800px" }}
+            className="absolute w-80 h-80 rounded-full blur-[80px] transition-all duration-300"
+            style={{
+              background: isHovered 
+                ? "radial-gradient(circle, rgba(59, 130, 246, 0.4), rgba(96, 165, 250, 0.1), transparent 70%)"
+                : "radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%)"
+            }}
+          />
+          
+          {/* Robot image with interactive transform */}
+          <div 
+            className="relative z-10 robot-float"
+            style={{
+              transform: `perspective(1000px) rotateX(${robotTransform.rotateX}deg) rotateY(${robotTransform.rotateY}deg) translateX(${robotTransform.translateX}px)`,
+              transition: "transform 0.15s ease-out",
+              transformStyle: "preserve-3d"
+            }}
           >
-            <div className="robot-float">
-              {/* Head - with rotation following cursor */}
-              <div 
-                className="relative mx-auto w-24 h-24 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-lg mb-2"
-                style={{ 
-                  transform: `perspective(500px) rotateX(${headRotation.x}deg) rotateY(${headRotation.y}deg)`,
-                  boxShadow: "0 4px 30px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.1)",
-                  transition: "transform 0.1s ease-out"
-                }}
-              >
-                {/* Face visor */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-7 bg-gradient-to-r from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center gap-4 shadow-inner">
-                  {/* Eyes - follow mouse */}
-                  <div 
-                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
-                    style={{ 
-                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
-                      transition: "transform 0.1s ease-out"
-                    }}
-                  />
-                  <div 
-                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
-                    style={{ 
-                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
-                      transition: "transform 0.1s ease-out"
-                    }}
-                  />
-                </div>
-              </div>
-            
-            {/* Neck */}
-            <div className="mx-auto w-8 h-5 bg-gradient-to-b from-neutral-100 to-neutral-300 rounded-sm" />
-            
-            {/* Torso */}
-            <div 
-              className="relative mx-auto w-40 h-44 bg-gradient-to-b from-white to-neutral-200 rounded-lg shadow-xl flex items-center justify-center"
-              style={{ boxShadow: "0 8px 40px rgba(255,255,255,0.3), inset 0 -4px 15px rgba(0,0,0,0.05)" }}
-            >
-              {/* Chest plate */}
-              <div className="w-24 h-14 bg-gradient-to-b from-neutral-100 to-neutral-200 rounded-md shadow-inner flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full border-2 border-blue-400/70 flex items-center justify-center">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.9)]" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Left Arm - moves with cursor */}
-            <div 
-              className="absolute left-[-40px] top-32 flex flex-col items-center transition-transform duration-200 ease-out origin-top"
-              style={{ transform: `rotate(${armRotation.left}deg)` }}
-            >
-              {/* Shoulder */}
-              <div className="w-8 h-8 bg-neutral-100 rounded-full shadow-lg" />
-              {/* Upper arm */}
-              <div className="w-5 h-20 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Elbow */}
-              <div className="w-6 h-6 bg-neutral-200 rounded-full shadow-md" />
-              {/* Forearm */}
-              <div className="w-4 h-16 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Hand - with fingers */}
-              <div className="relative">
-                <div className="w-7 h-7 bg-neutral-100 rounded-full shadow-lg" />
-                {/* Fingers */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-0.5">
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Right Arm - moves with cursor */}
-            <div 
-              className="absolute right-[-40px] top-32 flex flex-col items-center transition-transform duration-200 ease-out origin-top"
-              style={{ transform: `rotate(${armRotation.right}deg)` }}
-            >
-              {/* Shoulder */}
-              <div className="w-8 h-8 bg-neutral-100 rounded-full shadow-lg" />
-              {/* Upper arm */}
-              <div className="w-5 h-20 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Elbow */}
-              <div className="w-6 h-6 bg-neutral-200 rounded-full shadow-md" />
-              {/* Forearm */}
-              <div className="w-4 h-16 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Hand - with fingers */}
-              <div className="relative">
-                <div className="w-7 h-7 bg-neutral-100 rounded-full shadow-lg" />
-                {/* Fingers */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-0.5">
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                </div>
-              </div>
-            </div>
-            </div>
+            <img 
+              src={robotImage} 
+              alt="AI Robot" 
+              className="w-auto h-[420px] object-contain drop-shadow-[0_0_30px_rgba(59,130,246,0.4)]"
+              style={{
+                filter: isHovered 
+                  ? "drop-shadow(0 0 40px rgba(59, 130, 246, 0.6)) brightness(1.1)" 
+                  : "drop-shadow(0 0 20px rgba(59, 130, 246, 0.3))"
+              }}
+            />
           </div>
         </div>
       </div>
