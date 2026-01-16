@@ -110,111 +110,300 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
         {/* CSS Robot Figure */}
         <div className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden">
           {/* Glow background */}
-          <div className="absolute w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] animate-pulse" />
+          <div className="absolute w-72 h-72 bg-blue-500/20 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute w-48 h-48 bg-cyan-400/15 rounded-full blur-[60px] animate-pulse" style={{ animationDelay: "1s" }} />
           
-          {/* Robot figure - upper body only */}
+          {/* Robot figure - humanoid upper body */}
           <div 
             ref={robotRef}
             className="relative" 
-            style={{ perspective: "800px" }}
+            style={{ perspective: "1000px" }}
           >
             <div className="robot-float">
-              {/* Head - with rotation following cursor */}
+              {/* Head - more realistic humanoid shape */}
               <div 
-                className="relative mx-auto w-24 h-24 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-lg mb-2"
+                className="relative mx-auto"
                 style={{ 
-                  transform: `perspective(500px) rotateX(${headRotation.x}deg) rotateY(${headRotation.y}deg)`,
-                  boxShadow: "0 4px 30px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.1)",
-                  transition: "transform 0.1s ease-out"
+                  transform: `perspective(600px) rotateX(${headRotation.x}deg) rotateY(${headRotation.y}deg)`,
+                  transition: "transform 0.15s ease-out"
                 }}
               >
-                {/* Face visor */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-7 bg-gradient-to-r from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center gap-4 shadow-inner">
-                  {/* Eyes - follow mouse */}
+                {/* Skull shape */}
+                <div 
+                  className="relative w-20 h-24 mx-auto"
+                  style={{
+                    background: "linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 40%, #d8d8d8 100%)",
+                    borderRadius: "45% 45% 42% 42% / 40% 40% 55% 55%",
+                    boxShadow: "0 8px 40px rgba(255,255,255,0.5), inset 0 -8px 20px rgba(0,0,0,0.08), inset 0 8px 15px rgba(255,255,255,0.9)"
+                  }}
+                >
+                  {/* Forehead accent */}
                   <div 
-                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
+                    className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-6 rounded-full"
+                    style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.8) 0%, transparent 100%)" }}
+                  />
+                  
+                  {/* Face plate / visor area */}
+                  <div 
+                    className="absolute top-8 left-1/2 -translate-x-1/2 w-16 h-10 rounded-lg overflow-hidden"
+                    style={{
+                      background: "linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)",
+                      boxShadow: "inset 0 2px 10px rgba(0,0,0,0.5), 0 0 20px rgba(59,130,246,0.3)"
+                    }}
+                  >
+                    {/* Eyes container */}
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-5">
+                      {/* Left eye */}
+                      <div className="relative">
+                        <div 
+                          className="w-4 h-4 rounded-full"
+                          style={{
+                            background: "radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6 50%, #1d4ed8)",
+                            boxShadow: "0 0 15px rgba(59,130,246,0.9), 0 0 30px rgba(59,130,246,0.5)",
+                            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+                            transition: "transform 0.1s ease-out"
+                          }}
+                        >
+                          {/* Pupil */}
+                          <div 
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full"
+                            style={{ boxShadow: "0 0 8px rgba(255,255,255,0.8)" }}
+                          />
+                        </div>
+                      </div>
+                      {/* Right eye */}
+                      <div className="relative">
+                        <div 
+                          className="w-4 h-4 rounded-full"
+                          style={{
+                            background: "radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6 50%, #1d4ed8)",
+                            boxShadow: "0 0 15px rgba(59,130,246,0.9), 0 0 30px rgba(59,130,246,0.5)",
+                            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+                            transition: "transform 0.1s ease-out"
+                          }}
+                        >
+                          {/* Pupil */}
+                          <div 
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full"
+                            style={{ boxShadow: "0 0 8px rgba(255,255,255,0.8)" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Chin detail */}
+                  <div 
+                    className="absolute bottom-2 left-1/2 -translate-x-1/2 w-8 h-3 rounded-full"
+                    style={{ background: "linear-gradient(180deg, #d0d0d0 0%, #e0e0e0 100%)" }}
+                  />
+                </div>
+                
+                {/* Ear panels */}
+                <div 
+                  className="absolute top-10 -left-1 w-3 h-8 rounded-full"
+                  style={{ background: "linear-gradient(90deg, #c0c0c0 0%, #e0e0e0 100%)" }}
+                />
+                <div 
+                  className="absolute top-10 -right-1 w-3 h-8 rounded-full"
+                  style={{ background: "linear-gradient(-90deg, #c0c0c0 0%, #e0e0e0 100%)" }}
+                />
+              </div>
+              
+              {/* Neck - more mechanical */}
+              <div className="mx-auto w-6 h-4 relative">
+                <div 
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(180deg, #d0d0d0 0%, #a0a0a0 50%, #d0d0d0 100%)",
+                    borderRadius: "2px"
+                  }}
+                />
+                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-neutral-400 rounded-full" />
+                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-neutral-400 rounded-full" />
+              </div>
+              
+              {/* Torso - more humanoid shape */}
+              <div className="relative mx-auto">
+                {/* Shoulders */}
+                <div 
+                  className="w-48 h-8 mx-auto"
+                  style={{
+                    background: "linear-gradient(180deg, #f0f0f0 0%, #d8d8d8 100%)",
+                    borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
+                    boxShadow: "0 -4px 20px rgba(255,255,255,0.4)"
+                  }}
+                />
+                
+                {/* Main torso */}
+                <div 
+                  className="w-36 h-40 mx-auto relative"
+                  style={{
+                    background: "linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 50%, #d0d0d0 100%)",
+                    borderRadius: "10% 10% 30% 30% / 5% 5% 20% 20%",
+                    boxShadow: "0 10px 50px rgba(255,255,255,0.3), inset 0 -10px 30px rgba(0,0,0,0.05)"
+                  }}
+                >
+                  {/* Chest plates */}
+                  <div className="absolute top-4 left-4 w-12 h-16 rounded-lg" 
                     style={{ 
-                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
-                      transition: "transform 0.1s ease-out"
+                      background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(200,200,200,0.3) 100%)",
+                      boxShadow: "inset 0 2px 8px rgba(0,0,0,0.1)"
+                    }} 
+                  />
+                  <div className="absolute top-4 right-4 w-12 h-16 rounded-lg" 
+                    style={{ 
+                      background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(200,200,200,0.3) 100%)",
+                      boxShadow: "inset 0 2px 8px rgba(0,0,0,0.1)"
+                    }} 
+                  />
+                  
+                  {/* Core reactor */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full"
+                    style={{
+                      background: "linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)",
+                      boxShadow: "inset 0 2px 10px rgba(0,0,0,0.5)"
+                    }}
+                  >
+                    <div className="absolute inset-2 rounded-full border border-blue-400/50">
+                      <div className="absolute inset-1 rounded-full bg-blue-500 animate-pulse"
+                        style={{ boxShadow: "0 0 20px rgba(59,130,246,1), 0 0 40px rgba(59,130,246,0.5)" }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Abdominal sections */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col gap-1.5">
+                    <div className="w-16 h-3 bg-neutral-300/50 rounded-sm" />
+                    <div className="w-14 h-3 bg-neutral-300/50 rounded-sm mx-auto" />
+                    <div className="w-12 h-3 bg-neutral-300/50 rounded-sm mx-auto" />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Left Arm - more realistic */}
+              <div 
+                className="absolute left-[-36px] top-32 flex flex-col items-center origin-top"
+                style={{ 
+                  transform: `rotate(${armRotation.left}deg)`,
+                  transition: "transform 0.2s ease-out"
+                }}
+              >
+                {/* Shoulder joint */}
+                <div 
+                  className="w-10 h-10 rounded-full"
+                  style={{
+                    background: "radial-gradient(circle at 30% 30%, #f0f0f0, #c0c0c0)",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                  }}
+                />
+                {/* Upper arm */}
+                <div 
+                  className="w-6 h-20 -mt-1"
+                  style={{
+                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                    borderRadius: "20px"
+                  }}
+                />
+                {/* Elbow joint */}
+                <div 
+                  className="w-7 h-7 rounded-full -mt-1"
+                  style={{
+                    background: "radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0)",
+                    boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                  }}
+                />
+                {/* Forearm */}
+                <div 
+                  className="w-5 h-16 -mt-1"
+                  style={{
+                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                    borderRadius: "15px"
+                  }}
+                />
+                {/* Wrist */}
+                <div className="w-4 h-2 bg-neutral-400 rounded-full" />
+                {/* Hand */}
+                <div className="relative">
+                  <div 
+                    className="w-8 h-10 rounded-lg"
+                    style={{
+                      background: "linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%)",
+                      borderRadius: "30% 30% 40% 40%"
                     }}
                   />
+                  {/* Fingers */}
+                  <div className="absolute -bottom-4 left-0 flex gap-0.5">
+                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right Arm - more realistic */}
+              <div 
+                className="absolute right-[-36px] top-32 flex flex-col items-center origin-top"
+                style={{ 
+                  transform: `rotate(${armRotation.right}deg)`,
+                  transition: "transform 0.2s ease-out"
+                }}
+              >
+                {/* Shoulder joint */}
+                <div 
+                  className="w-10 h-10 rounded-full"
+                  style={{
+                    background: "radial-gradient(circle at 70% 30%, #f0f0f0, #c0c0c0)",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                  }}
+                />
+                {/* Upper arm */}
+                <div 
+                  className="w-6 h-20 -mt-1"
+                  style={{
+                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                    borderRadius: "20px"
+                  }}
+                />
+                {/* Elbow joint */}
+                <div 
+                  className="w-7 h-7 rounded-full -mt-1"
+                  style={{
+                    background: "radial-gradient(circle at 70% 30%, #e0e0e0, #a0a0a0)",
+                    boxShadow: "inset 0 -2px 5px rgba(0,0,0,0.1)"
+                  }}
+                />
+                {/* Forearm */}
+                <div 
+                  className="w-5 h-16 -mt-1"
+                  style={{
+                    background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
+                    borderRadius: "15px"
+                  }}
+                />
+                {/* Wrist */}
+                <div className="w-4 h-2 bg-neutral-400 rounded-full" />
+                {/* Hand */}
+                <div className="relative">
                   <div 
-                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
-                    style={{ 
-                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
-                      transition: "transform 0.1s ease-out"
+                    className="w-8 h-10 rounded-lg"
+                    style={{
+                      background: "linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%)",
+                      borderRadius: "30% 30% 40% 40%"
                     }}
                   />
+                  {/* Fingers */}
+                  <div className="absolute -bottom-4 left-0 flex gap-0.5">
+                    <div className="w-1.5 h-4 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-6 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                    <div className="w-1.5 h-5 bg-gradient-to-b from-neutral-200 to-neutral-300 rounded-full" />
+                  </div>
                 </div>
               </div>
-            
-            {/* Neck */}
-            <div className="mx-auto w-8 h-5 bg-gradient-to-b from-neutral-100 to-neutral-300 rounded-sm" />
-            
-            {/* Torso */}
-            <div 
-              className="relative mx-auto w-40 h-44 bg-gradient-to-b from-white to-neutral-200 rounded-lg shadow-xl flex items-center justify-center"
-              style={{ boxShadow: "0 8px 40px rgba(255,255,255,0.3), inset 0 -4px 15px rgba(0,0,0,0.05)" }}
-            >
-              {/* Chest plate */}
-              <div className="w-24 h-14 bg-gradient-to-b from-neutral-100 to-neutral-200 rounded-md shadow-inner flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full border-2 border-blue-400/70 flex items-center justify-center">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.9)]" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Left Arm - moves with cursor */}
-            <div 
-              className="absolute left-[-40px] top-32 flex flex-col items-center transition-transform duration-200 ease-out origin-top"
-              style={{ transform: `rotate(${armRotation.left}deg)` }}
-            >
-              {/* Shoulder */}
-              <div className="w-8 h-8 bg-neutral-100 rounded-full shadow-lg" />
-              {/* Upper arm */}
-              <div className="w-5 h-20 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Elbow */}
-              <div className="w-6 h-6 bg-neutral-200 rounded-full shadow-md" />
-              {/* Forearm */}
-              <div className="w-4 h-16 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Hand - with fingers */}
-              <div className="relative">
-                <div className="w-7 h-7 bg-neutral-100 rounded-full shadow-lg" />
-                {/* Fingers */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-0.5">
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Right Arm - moves with cursor */}
-            <div 
-              className="absolute right-[-40px] top-32 flex flex-col items-center transition-transform duration-200 ease-out origin-top"
-              style={{ transform: `rotate(${armRotation.right}deg)` }}
-            >
-              {/* Shoulder */}
-              <div className="w-8 h-8 bg-neutral-100 rounded-full shadow-lg" />
-              {/* Upper arm */}
-              <div className="w-5 h-20 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Elbow */}
-              <div className="w-6 h-6 bg-neutral-200 rounded-full shadow-md" />
-              {/* Forearm */}
-              <div className="w-4 h-16 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-md" />
-              {/* Hand - with fingers */}
-              <div className="relative">
-                <div className="w-7 h-7 bg-neutral-100 rounded-full shadow-lg" />
-                {/* Fingers */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-0.5">
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-5 bg-neutral-200 rounded-full" />
-                  <div className="w-1.5 h-4 bg-neutral-200 rounded-full" />
-                </div>
-              </div>
-            </div>
             </div>
           </div>
         </div>
