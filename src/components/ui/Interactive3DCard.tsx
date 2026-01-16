@@ -62,75 +62,87 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
           {children}
         </div>
 
-        {/* 3D Visual area with CSS animations */}
+        {/* CSS Robot Figure */}
         <div className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden">
-          {/* Animated floating elements */}
-          <div className="absolute w-40 h-40 rounded-full bg-gradient-to-br from-blue-500/30 to-blue-600/10 blur-xl animate-float" />
+          {/* Glow background */}
+          <div className="absolute w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] animate-pulse" />
           
-          {/* Central orb */}
-          <div className="relative">
-            <div 
-              className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 shadow-2xl animate-pulse-glow"
-              style={{
-                boxShadow: "0 0 60px rgba(59, 130, 246, 0.5), inset 0 0 30px rgba(255,255,255,0.2)"
-              }}
-            />
-            {/* Orbiting ring 1 */}
-            <div 
-              className="absolute inset-0 border-2 border-blue-400/30 rounded-full"
-              style={{
-                width: "200%",
-                height: "200%",
-                left: "-50%",
-                top: "-50%",
-                animation: "spin 20s linear infinite"
-              }}
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-blue-400 shadow-lg" />
+          {/* Robot figure */}
+          <div className="relative robot-container" style={{ transform: "scale(0.85)" }}>
+            {/* Head */}
+            <div className="relative mx-auto w-20 h-20 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full shadow-lg mb-1">
+              {/* Face visor */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-6 bg-gradient-to-r from-neutral-800 to-neutral-900 rounded-full flex items-center justify-center gap-3">
+                {/* Eyes */}
+                <div className="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
+                <div className="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
+              </div>
             </div>
-            {/* Orbiting ring 2 */}
-            <div 
-              className="absolute inset-0 border border-blue-500/20 rounded-full"
-              style={{
-                width: "280%",
-                height: "280%",
-                left: "-90%",
-                top: "-90%",
-                animation: "spin 30s linear infinite reverse"
-              }}
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-300" />
+            
+            {/* Neck */}
+            <div className="mx-auto w-6 h-4 bg-gradient-to-b from-neutral-600 to-neutral-800 rounded-sm" />
+            
+            {/* Torso */}
+            <div className="relative mx-auto w-32 h-36 bg-gradient-to-b from-neutral-800 to-neutral-950 rounded-lg shadow-xl flex items-center justify-center">
+              {/* Chest plate */}
+              <div className="w-20 h-12 bg-gradient-to-b from-neutral-700 to-neutral-800 rounded-md shadow-inner flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full border-2 border-blue-500/50 flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Arms */}
+            <div className="absolute left-[-30px] top-28 flex flex-col items-center">
+              {/* Shoulder */}
+              <div className="w-6 h-6 bg-neutral-700 rounded-full" />
+              {/* Upper arm */}
+              <div className="w-4 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+              {/* Elbow */}
+              <div className="w-5 h-5 bg-neutral-600 rounded-full" />
+              {/* Forearm */}
+              <div className="w-3 h-12 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+              {/* Hand */}
+              <div className="w-5 h-5 bg-neutral-700 rounded-full" />
+            </div>
+            
+            <div className="absolute right-[-30px] top-28 flex flex-col items-center">
+              {/* Shoulder */}
+              <div className="w-6 h-6 bg-neutral-700 rounded-full" />
+              {/* Upper arm */}
+              <div className="w-4 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+              {/* Elbow */}
+              <div className="w-5 h-5 bg-neutral-600 rounded-full" />
+              {/* Forearm */}
+              <div className="w-3 h-12 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+              {/* Hand */}
+              <div className="w-5 h-5 bg-neutral-700 rounded-full" />
+            </div>
+            
+            {/* Waist */}
+            <div className="mx-auto w-24 h-6 bg-gradient-to-b from-neutral-800 to-neutral-900 rounded-md mt-1" />
+            
+            {/* Legs */}
+            <div className="flex justify-center gap-4 mt-1">
+              {/* Left leg */}
+              <div className="flex flex-col items-center">
+                <div className="w-5 h-5 bg-neutral-700 rounded-full" />
+                <div className="w-4 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+                <div className="w-5 h-5 bg-neutral-600 rounded-full" />
+                <div className="w-3 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+                <div className="w-6 h-3 bg-neutral-800 rounded-sm" />
+              </div>
+              
+              {/* Right leg */}
+              <div className="flex flex-col items-center">
+                <div className="w-5 h-5 bg-neutral-700 rounded-full" />
+                <div className="w-4 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+                <div className="w-5 h-5 bg-neutral-600 rounded-full" />
+                <div className="w-3 h-16 bg-gradient-to-b from-neutral-700 to-neutral-900 rounded-full" />
+                <div className="w-6 h-3 bg-neutral-800 rounded-sm" />
+              </div>
             </div>
           </div>
-          
-          {/* Floating cubes */}
-          <div 
-            className="absolute w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-lg"
-            style={{
-              top: "20%",
-              right: "25%",
-              animation: "float 4s ease-in-out infinite",
-              transform: "rotate(45deg)"
-            }}
-          />
-          <div 
-            className="absolute w-5 h-5 bg-gradient-to-br from-blue-300 to-blue-500 rounded-md shadow-lg"
-            style={{
-              bottom: "30%",
-              right: "15%",
-              animation: "float 5s ease-in-out infinite 0.5s",
-              transform: "rotate(12deg)"
-            }}
-          />
-          <div 
-            className="absolute w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg shadow-lg"
-            style={{
-              top: "60%",
-              right: "35%",
-              animation: "float 3.5s ease-in-out infinite 1s",
-              transform: "rotate(-20deg)"
-            }}
-          />
         </div>
       </div>
 
@@ -138,9 +150,12 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0f] to-transparent pointer-events-none" />
 
       <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        .robot-container {
+          animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) scale(0.85); }
+          50% { transform: translateY(-15px) scale(0.85); }
         }
       `}</style>
     </div>
