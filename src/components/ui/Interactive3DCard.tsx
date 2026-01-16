@@ -115,31 +115,38 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
           {/* Robot figure - upper body only */}
           <div 
             ref={robotRef}
-            className="relative robot-container" 
-            style={{ transform: "scale(1)" }}
+            className="relative" 
+            style={{ perspective: "800px" }}
           >
-            {/* Head - with rotation following cursor */}
-            <div 
-              className="relative mx-auto w-24 h-24 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-lg mb-2 transition-transform duration-150 ease-out"
-              style={{ 
-                transform: `rotateX(${headRotation.x}deg) rotateY(${headRotation.y}deg) translateZ(10px)`,
-                boxShadow: "0 4px 30px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.1)",
-                transformStyle: "preserve-3d"
-              }}
-            >
-              {/* Face visor */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-7 bg-gradient-to-r from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center gap-4 shadow-inner">
-                {/* Eyes - follow mouse */}
-                <div 
-                  className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)] transition-transform duration-100 ease-out"
-                  style={{ transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)` }}
-                />
-                <div 
-                  className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)] transition-transform duration-100 ease-out"
-                  style={{ transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)` }}
-                />
+            <div className="robot-float">
+              {/* Head - with rotation following cursor */}
+              <div 
+                className="relative mx-auto w-24 h-24 bg-gradient-to-b from-white to-neutral-200 rounded-full shadow-lg mb-2"
+                style={{ 
+                  transform: `perspective(500px) rotateX(${headRotation.x}deg) rotateY(${headRotation.y}deg)`,
+                  boxShadow: "0 4px 30px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.1)",
+                  transition: "transform 0.1s ease-out"
+                }}
+              >
+                {/* Face visor */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-7 bg-gradient-to-r from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center gap-4 shadow-inner">
+                  {/* Eyes - follow mouse */}
+                  <div 
+                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
+                    style={{ 
+                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+                      transition: "transform 0.1s ease-out"
+                    }}
+                  />
+                  <div 
+                    className="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)]"
+                    style={{ 
+                      transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+                      transition: "transform 0.1s ease-out"
+                    }}
+                  />
+                </div>
               </div>
-            </div>
             
             {/* Neck */}
             <div className="mx-auto w-8 h-5 bg-gradient-to-b from-neutral-100 to-neutral-300 rounded-sm" />
@@ -208,6 +215,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -216,12 +224,12 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0f] to-transparent pointer-events-none" />
 
       <style>{`
-        .robot-container {
+        .robot-float {
           animation: float 6s ease-in-out infinite;
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-15px) scale(1); }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
         }
       `}</style>
     </div>
