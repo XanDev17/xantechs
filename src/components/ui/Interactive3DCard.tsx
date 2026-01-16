@@ -12,7 +12,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const [isHovered, setIsHovered] = useState(false);
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
   const [headRotation, setHeadRotation] = useState({ x: 0, y: 0 });
-  const [armRotation, setArmRotation] = useState({ left: 0, right: 0 });
+  const [armRotation, setArmRotation] = useState({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !robotRef.current) return;
@@ -51,17 +51,19 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
       y: Math.max(-maxRotation, Math.min(maxRotation, rotateY)) 
     });
 
-    // Arm rotation - arms point toward cursor
-    const leftArmRotation = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 - 20));
-    const rightArmRotation = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 + 20));
-    setArmRotation({ left: leftArmRotation, right: rightArmRotation });
+    // Arm rotation - arms point toward cursor (X for side-to-side, Y for raise/lower)
+    const leftArmX = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 - 20));
+    const rightArmX = Math.max(-45, Math.min(45, (deltaX / rect.width) * 60 + 20));
+    // Y rotation raises arms when cursor is above robot, lowers when below
+    const armY = Math.max(-60, Math.min(30, -(deltaY / rect.height) * 80));
+    setArmRotation({ leftX: leftArmX, leftY: armY, rightX: rightArmX, rightY: armY });
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
     setEyeOffset({ x: 0, y: 0 });
     setHeadRotation({ x: 0, y: 0 });
-    setArmRotation({ left: 0, right: 0 });
+    setArmRotation({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
   };
 
   return (
@@ -285,7 +287,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
               <div 
                 className="absolute left-[-36px] top-32 flex flex-col items-center origin-top"
                 style={{ 
-                  transform: `rotate(${armRotation.left}deg)`,
+                  transform: `rotateZ(${armRotation.leftX}deg) rotateX(${armRotation.leftY}deg)`,
                   transition: "transform 0.2s ease-out"
                 }}
               >
@@ -347,7 +349,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
               <div 
                 className="absolute right-[-36px] top-32 flex flex-col items-center origin-top"
                 style={{ 
-                  transform: `rotate(${armRotation.right}deg)`,
+                  transform: `rotateZ(${armRotation.rightX}deg) rotateX(${armRotation.rightY}deg)`,
                   transition: "transform 0.2s ease-out"
                 }}
               >
