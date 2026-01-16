@@ -11,7 +11,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const robotRef = useRef<HTMLDivElement>(null);
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const [robotTransform, setRobotTransform] = useState({ rotateX: 0, rotateY: 0, translateX: 0 });
+  const [robotTransform, setRobotTransform] = useState({ rotateX: 0, rotateY: 0, translateX: 0, translateY: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -29,22 +29,24 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     const deltaX = e.clientX - rect.left - centerX;
     const deltaY = e.clientY - rect.top - centerY;
 
-    // Robot 3D rotation - follows cursor
-    const maxRotation = 15;
+    // Robot 3D rotation and movement - follows cursor
+    const maxRotation = 20;
     const rotateY = (deltaX / centerX) * maxRotation;
     const rotateX = -(deltaY / centerY) * maxRotation * 0.5;
-    const translateX = (deltaX / centerX) * 20;
+    const translateX = (deltaX / centerX) * 30;
+    const translateY = (deltaY / centerY) * 20;
 
     setRobotTransform({
       rotateX: Math.max(-maxRotation, Math.min(maxRotation, rotateX)),
       rotateY: Math.max(-maxRotation, Math.min(maxRotation, rotateY)),
-      translateX: Math.max(-30, Math.min(30, translateX))
+      translateX: Math.max(-40, Math.min(40, translateX)),
+      translateY: Math.max(-30, Math.min(30, translateY))
     });
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setRobotTransform({ rotateX: 0, rotateY: 0, translateX: 0 });
+    setRobotTransform({ rotateX: 0, rotateY: 0, translateX: 0, translateY: 0 });
   };
 
   return (
@@ -94,37 +96,49 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
         <div 
           ref={robotRef}
           className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden"
-          style={{ perspective: "1000px" }}
+          style={{ perspective: "1200px" }}
         >
-          {/* Glow behind robot */}
+          {/* Glow behind robot - moves with cursor */}
           <div 
-            className="absolute w-80 h-80 rounded-full blur-[80px] transition-all duration-300"
+            className="absolute w-96 h-96 rounded-full blur-[100px] transition-all duration-500"
             style={{
               background: isHovered 
-                ? "radial-gradient(circle, rgba(59, 130, 246, 0.4), rgba(96, 165, 250, 0.1), transparent 70%)"
-                : "radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%)"
+                ? "radial-gradient(circle, rgba(59, 130, 246, 0.5), rgba(96, 165, 250, 0.15), transparent 70%)"
+                : "radial-gradient(circle, rgba(59, 130, 246, 0.25), transparent 70%)",
+              transform: `translate(${robotTransform.translateX * 0.5}px, ${robotTransform.translateY * 0.5}px)`
             }}
           />
           
-          {/* Robot image with interactive transform */}
-          <div 
-            className="relative z-10 robot-float"
-            style={{
-              transform: `perspective(1000px) rotateX(${robotTransform.rotateX}deg) rotateY(${robotTransform.rotateY}deg) translateX(${robotTransform.translateX}px)`,
-              transition: "transform 0.15s ease-out",
-              transformStyle: "preserve-3d"
-            }}
-          >
-            <img 
-              src={robotImage} 
-              alt="AI Robot" 
-              className="w-auto h-[420px] object-contain drop-shadow-[0_0_30px_rgba(59,130,246,0.4)]"
+          {/* Float animation wrapper */}
+          <div className={isHovered ? "" : "robot-float"}>
+            {/* Robot image with interactive 3D transform */}
+            <div 
+              className="relative z-10"
               style={{
-                filter: isHovered 
-                  ? "drop-shadow(0 0 40px rgba(59, 130, 246, 0.6)) brightness(1.1)" 
-                  : "drop-shadow(0 0 20px rgba(59, 130, 246, 0.3))"
+                transform: `
+                  perspective(1200px) 
+                  rotateX(${robotTransform.rotateX}deg) 
+                  rotateY(${robotTransform.rotateY}deg) 
+                  translateX(${robotTransform.translateX}px) 
+                  translateY(${robotTransform.translateY}px)
+                  scale(${isHovered ? 1.05 : 1})
+                `,
+                transition: "transform 0.2s ease-out, filter 0.3s ease-out",
+                transformStyle: "preserve-3d"
               }}
-            />
+            >
+              <img 
+                src={robotImage} 
+                alt="AI Robot" 
+                className="w-auto h-[420px] object-contain"
+                style={{
+                  filter: isHovered 
+                    ? "drop-shadow(0 0 50px rgba(59, 130, 246, 0.7)) drop-shadow(0 20px 40px rgba(0,0,0,0.5)) brightness(1.1)" 
+                    : "drop-shadow(0 0 25px rgba(59, 130, 246, 0.4)) drop-shadow(0 10px 20px rgba(0,0,0,0.3))",
+                  transition: "filter 0.3s ease-out"
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -134,11 +148,11 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
 
       <style>{`
         .robot-float {
-          animation: float 6s ease-in-out infinite;
+          animation: float 4s ease-in-out infinite;
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-15px); }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
         }
       `}</style>
     </div>
