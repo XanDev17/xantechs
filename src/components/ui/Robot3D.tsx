@@ -1,7 +1,9 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
+
+export type RobotMode = "normal" | "waving" | "dumbbell" | "lovable";
 
 interface Robot3DProps {
   eyeOffset: { x: number; y: number };
@@ -11,6 +13,8 @@ interface Robot3DProps {
   elbowBend: number;
   shoulderCompress: { left: number; right: number };
   wristRotation: { left: number; right: number };
+  mode?: RobotMode;
+  hoverEnabled?: boolean;
 }
 
 // Glowing thruster component
@@ -123,6 +127,8 @@ function RobotModel({
   elbowBend,
   shoulderCompress,
   wristRotation,
+  mode = "normal",
+  hoverEnabled = true,
 }: Robot3DProps) {
   const headRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
@@ -138,6 +144,10 @@ function RobotModel({
   const rightLegRef = useRef<THREE.Group>(null);
   const leftKneeRef = useRef<THREE.Group>(null);
   const rightKneeRef = useRef<THREE.Group>(null);
+  const rootRef = useRef<THREE.Group>(null);
+  
+  // Eye blink state
+  const blinkRef = useRef({ nextBlink: 2, blinking: false, blinkProgress: 0 });
 
   // Biomechanical materials
   const armorMaterial = useMemo(
@@ -225,21 +235,54 @@ function RobotModel({
     []
   );
 
-  // Human-like walking animation
-  useFrame((state) => {
+  // Human-like walking animation with personality modes
+  useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
     
+    // Mode-specific speed multipliers
+    const modeSpeedMultiplier = mode === "lovable" ? 1.3 : 1.0;
+    
     // Walking parameters - slower, more natural pace
-    const walkSpeed = 1.8; // Slower for more realistic human gait
-    const strideLength = 0.28; // How far legs swing
+    const walkSpeed = 1.8 * modeSpeedMultiplier;
+    const strideLength = 0.28;
     
     // Walking cycle phase (0 to 2π)
     const walkCycle = time * walkSpeed;
     
+    // === HOVER MOVEMENT ===
+    if (rootRef.current && hoverEnabled) {
+      const hoverY = Math.sin(time * 0.8) * 0.06;
+      const hoverX = Math.sin(time * 0.5) * 0.02;
+      rootRef.current.position.y = hoverY;
+      rootRef.current.position.x = hoverX;
+    } else if (rootRef.current) {
+      rootRef.current.position.y = THREE.MathUtils.lerp(rootRef.current.position.y, 0, 0.1);
+      rootRef.current.position.x = THREE.MathUtils.lerp(rootRef.current.position.x, 0, 0.1);
+    }
+    
+    // === EYE BLINK ANIMATION ===
+    const blink = blinkRef.current;
+    blink.nextBlink -= delta;
+    if (blink.nextBlink <= 0 && !blink.blinking) {
+      blink.blinking = true;
+      blink.blinkProgress = 0;
+    }
+    if (blink.blinking) {
+      blink.blinkProgress += delta * 12;
+      if (blink.blinkProgress >= 1) {
+        blink.blinking = false;
+        blink.nextBlink = 2 + Math.random() * 4; // Random 2-6 second interval
+      }
+    }
+    const eyeScale = blink.blinking 
+      ? 1 - Math.sin(blink.blinkProgress * Math.PI) * 0.9 
+      : 1;
+    if (leftEyeRef.current) leftEyeRef.current.scale.y = eyeScale;
+    if (rightEyeRef.current) rightEyeRef.current.scale.y = eyeScale;
+    
     // === BODY MOTION ===
     if (bodyRef.current) {
       // Vertical bob - humans bob twice per stride (once per foot strike)
-      // Lowest point when foot strikes, highest at mid-stance
       const verticalBob = Math.abs(Math.sin(walkCycle * 2)) * 0.018;
       bodyRef.current.position.y = -0.3 + verticalBob;
       
@@ -254,6 +297,11 @@ function RobotModel({
       
       // Slight forward lean while walking
       bodyRef.current.rotation.x = 0.02;
+      
+      // Lovable mode: extra happy bounce
+      if (mode === "lovable") {
+        bodyRef.current.position.y += Math.abs(Math.sin(time * 3)) * 0.03;
+      }
     }
 
     // === LEG MOTION ===
@@ -337,7 +385,6 @@ function RobotModel({
 
     // === ARM MOTION ===
     // Human arm swing: arms swing opposite to legs (contralateral pattern)
-    // Right arm forward when left leg forward, with natural elbow bend
     const armSwingAmplitude = 0.22;
     
     // Calculate user input influence
@@ -346,27 +393,57 @@ function RobotModel({
     const leftSwingReduction = Math.max(0, 1 - leftArmUserInput / 25);
     const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 25);
     
+    // Mode-specific arm animations
+    const isWaving = mode === "waving" || mode === "lovable";
+    const isDumbbell = mode === "dumbbell";
+    
     if (leftArmRef.current) {
-      // Left arm swings forward when right leg is forward (walkCycle + PI)
+      if (isDumbbell) {
+        // Dumbbell curling motion
+        const curlPhase = Math.sin(time * 2) * 0.5 + 0.5; // 0 to 1
+        const curlAngle = -1.2 - curlPhase * 0.8; // Arm raised, curling
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.x,
+          curlAngle,
+          0.08
+        );
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.z,
+          0.3,
+          0.08
+        );
+      } else if (mode === "lovable") {
+        // Happy waving with both arms
+        const wavePhase = Math.sin(time * 6) * 0.4;
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.x,
+          -1.5 + wavePhase * 0.3,
+          0.1
+        );
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.z,
+          0.8 + wavePhase,
+          0.1
+        );
+      } else {
+        // Normal walking swing
+        const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.x,
+          armSwing + (armRotation.leftY * Math.PI) / 180,
+          0.1
+        );
+        const swingOutward = Math.sin(walkCycle + Math.PI) > 0 ? 0.03 : 0;
+        const userRaise = Math.max(0, -armRotation.leftY) * 0.012;
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.z,
+          0.12 + swingOutward * leftSwingReduction + (armRotation.leftX * Math.PI) / 180 + userRaise,
+          0.1
+        );
+      }
+      
+      // Shoulder position
       const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
-      
-      // Natural arm swing with slight outward arc at front of swing
-      leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
-        leftArmRef.current.rotation.x,
-        armSwing + (armRotation.leftY * Math.PI) / 180,
-        0.1
-      );
-      
-      // Arm naturally swings slightly outward when moving forward
-      const swingOutward = Math.sin(walkCycle + Math.PI) > 0 ? 0.03 : 0;
-      const userRaise = Math.max(0, -armRotation.leftY) * 0.012;
-      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
-        leftArmRef.current.rotation.z,
-        0.12 + swingOutward * leftSwingReduction + (armRotation.leftX * Math.PI) / 180 + userRaise,
-        0.1
-      );
-      
-      // Shoulder rises slightly when arm swings back
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
         leftArmRef.current.position.y,
         1.65 + shoulderCompress.left * 0.01 + (armSwing < 0 ? 0.01 : 0),
@@ -375,23 +452,52 @@ function RobotModel({
     }
 
     if (rightArmRef.current) {
-      // Right arm swings forward when left leg is forward (walkCycle)
+      if (isWaving) {
+        // Enthusiastic waving gesture
+        const waveSpeed = mode === "lovable" ? 7 : 5;
+        const wavePhase = Math.sin(time * waveSpeed) * 0.5;
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          -1.8 + wavePhase * 0.2,
+          0.1
+        );
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.z,
+          -0.6 + wavePhase,
+          0.12
+        );
+      } else if (isDumbbell) {
+        // Mirror arm for support
+        const armSwing = Math.sin(walkCycle) * armSwingAmplitude * 0.5;
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          armSwing,
+          0.1
+        );
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.z,
+          -0.12,
+          0.1
+        );
+      } else {
+        // Normal walking swing
+        const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          armSwing + (armRotation.rightY * Math.PI) / 180,
+          0.1
+        );
+        const swingOutward = Math.sin(walkCycle) > 0 ? -0.03 : 0;
+        const userRaise = Math.max(0, -armRotation.rightY) * 0.012;
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.z,
+          -0.12 + swingOutward * rightSwingReduction + (armRotation.rightX * Math.PI) / 180 - userRaise,
+          0.1
+        );
+      }
+      
+      // Shoulder position
       const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
-      
-      rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
-        rightArmRef.current.rotation.x,
-        armSwing + (armRotation.rightY * Math.PI) / 180,
-        0.1
-      );
-      
-      const swingOutward = Math.sin(walkCycle) > 0 ? -0.03 : 0;
-      const userRaise = Math.max(0, -armRotation.rightY) * 0.012;
-      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
-        rightArmRef.current.rotation.z,
-        -0.12 + swingOutward * rightSwingReduction + (armRotation.rightX * Math.PI) / 180 - userRaise,
-        0.1
-      );
-      
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
         rightArmRef.current.position.y,
         1.65 + shoulderCompress.right * 0.01 + (armSwing < 0 ? 0.01 : 0),
@@ -402,25 +508,51 @@ function RobotModel({
     // === ELBOW MOTION ===
     // Elbows bend more when arm swings back (natural human gait)
     if (leftElbowRef.current) {
-      const armPhase = Math.sin(walkCycle + Math.PI);
-      // Elbow bends when arm is behind body, extends when in front
-      const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
-      const userBend = Math.max(0, -armRotation.leftY / 50) * 0.5;
-      leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
-        leftElbowRef.current.rotation.x,
-        naturalBend * leftSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
-        0.1
-      );
+      if (isDumbbell) {
+        // Dramatic elbow bend for dumbbell curl
+        const curlPhase = Math.sin(time * 2) * 0.5 + 0.5;
+        leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftElbowRef.current.rotation.x,
+          0.5 + curlPhase * 1.2,
+          0.08
+        );
+      } else if (mode === "lovable") {
+        const wavePhase = Math.sin(time * 6) * 0.3;
+        leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftElbowRef.current.rotation.x,
+          0.8 + wavePhase,
+          0.1
+        );
+      } else {
+        const armPhase = Math.sin(walkCycle + Math.PI);
+        const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
+        const userBend = Math.max(0, -armRotation.leftY / 50) * 0.5;
+        leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftElbowRef.current.rotation.x,
+          naturalBend * leftSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+          0.1
+        );
+      }
     }
     if (rightElbowRef.current) {
-      const armPhase = Math.sin(walkCycle);
-      const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
-      const userBend = Math.max(0, -armRotation.rightY / 50) * 0.5;
-      rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
-        rightElbowRef.current.rotation.x,
-        naturalBend * rightSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
-        0.1
-      );
+      if (isWaving) {
+        // Wave elbow bend
+        const wavePhase = Math.sin(time * (mode === "lovable" ? 7 : 5)) * 0.3;
+        rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightElbowRef.current.rotation.x,
+          0.6 + wavePhase,
+          0.12
+        );
+      } else {
+        const armPhase = Math.sin(walkCycle);
+        const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
+        const userBend = Math.max(0, -armRotation.rightY / 50) * 0.5;
+        rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightElbowRef.current.rotation.x,
+          naturalBend * rightSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+          0.1
+        );
+      }
     }
 
     // Wrists
@@ -451,8 +583,9 @@ function RobotModel({
   });
 
   return (
-    <group ref={bodyRef} position={[0, -0.3, 0]} scale={0.52}>
-      {/* ========== HEAD ========== */}
+    <group ref={rootRef}>
+      <group ref={bodyRef} position={[0, -0.3, 0]} scale={0.52}>
+        {/* ========== HEAD ========== */}
       <group ref={headRef} position={[0, 2.2, 0]}>
         {/* Main skull - segmented armor */}
         <mesh material={armorMaterial}>
@@ -851,7 +984,8 @@ function RobotModel({
       <pointLight position={[-1.5, 1, -1]} color="#ffffff" intensity={0.5} distance={5} />
       <pointLight position={[1.5, 1, -1]} color="#ffffff" intensity={0.5} distance={5} />
       <pointLight position={[0, -1, 2]} color="#00ffff" intensity={0.3} distance={3} />
-      <pointLight position={[0, 0.5, 1]} color="#00ffff" intensity={0.2} distance={2} />
+        <pointLight position={[0, 0.5, 1]} color="#00ffff" intensity={0.2} distance={2} />
+      </group>
     </group>
   );
 }
@@ -870,4 +1004,18 @@ export default function Robot3DCanvas(props: Robot3DProps) {
       <RobotModel {...props} />
     </Canvas>
   );
+}
+
+// Hook for external mode control
+export function useRobotMode() {
+  const [mode, setMode] = useState<RobotMode>("normal");
+  const [hoverEnabled, setHoverEnabled] = useState(true);
+  
+  return {
+    mode,
+    setMode,
+    hoverEnabled,
+    setHoverEnabled,
+    toggleHover: () => setHoverEnabled(prev => !prev),
+  };
 }
