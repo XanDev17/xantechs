@@ -235,19 +235,25 @@ function RobotModel({
       bodyRef.current.rotation.z = Math.sin(time * 0.8) * 0.015;
     }
 
-    // Leg movement during hover - hip rotation
+    // Walking animation for legs
+    const walkSpeed = 2.5;
+    const walkAmplitude = 0.35;
+    
+    // Left leg - forward/backward swing
     if (leftLegRef.current) {
-      leftLegRef.current.rotation.x = Math.sin(time * 1.5) * 0.1;
+      leftLegRef.current.rotation.x = Math.sin(time * walkSpeed) * walkAmplitude;
     }
     if (rightLegRef.current) {
-      rightLegRef.current.rotation.x = Math.sin(time * 1.5 + Math.PI) * 0.1;
+      rightLegRef.current.rotation.x = Math.sin(time * walkSpeed + Math.PI) * walkAmplitude;
     }
-    // Knee bend during hover
+    // Knee bend during walking - bends when leg goes back
     if (leftKneeRef.current) {
-      leftKneeRef.current.rotation.x = Math.abs(Math.sin(time * 1.5)) * 0.15;
+      const leftPhase = Math.sin(time * walkSpeed);
+      leftKneeRef.current.rotation.x = leftPhase < 0 ? Math.abs(leftPhase) * 0.5 : 0.05;
     }
     if (rightKneeRef.current) {
-      rightKneeRef.current.rotation.x = Math.abs(Math.sin(time * 1.5 + Math.PI)) * 0.15;
+      const rightPhase = Math.sin(time * walkSpeed + Math.PI);
+      rightKneeRef.current.rotation.x = rightPhase < 0 ? Math.abs(rightPhase) * 0.5 : 0.05;
     }
 
     // Head rotation with tracking
@@ -371,7 +377,7 @@ function RobotModel({
   });
 
   return (
-    <group ref={bodyRef} position={[0, 0, 0]} scale={0.52}>
+    <group ref={bodyRef} position={[0, -0.3, 0]} scale={0.52}>
       {/* ========== HEAD ========== */}
       <group ref={headRef} position={[0, 2.2, 0]}>
         {/* Main skull - segmented armor */}
@@ -768,7 +774,7 @@ function RobotModel({
 export default function Robot3DCanvas(props: Robot3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.3, 4.5], fov: 36 }}
+      camera={{ position: [0, 0.6, 3.8], fov: 40 }}
       style={{ width: "100%", height: "100%" }}
     >
       <ambientLight intensity={0.25} />
