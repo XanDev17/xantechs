@@ -242,22 +242,30 @@ function RobotModel({
     // Mode-specific speed multipliers
     const modeSpeedMultiplier = mode === "lovable" ? 1.3 : 1.0;
     
-    // Walking parameters - slower, more natural pace
+    // Walking only when NOT hovering
+    const isWalking = !hoverEnabled;
     const walkSpeed = 1.8 * modeSpeedMultiplier;
-    const strideLength = 0.28;
+    const strideLength = isWalking ? 0.28 : 0;
     
     // Walking cycle phase (0 to 2π)
     const walkCycle = time * walkSpeed;
     
-    // === HOVER MOVEMENT ===
-    if (rootRef.current && hoverEnabled) {
-      const hoverY = Math.sin(time * 0.8) * 0.06;
-      const hoverX = Math.sin(time * 0.5) * 0.02;
-      rootRef.current.position.y = hoverY;
-      rootRef.current.position.x = hoverX;
-    } else if (rootRef.current) {
-      rootRef.current.position.y = THREE.MathUtils.lerp(rootRef.current.position.y, 0, 0.1);
-      rootRef.current.position.x = THREE.MathUtils.lerp(rootRef.current.position.x, 0, 0.1);
+    // === HOVER MOVEMENT (floating in place, standing still) ===
+    if (rootRef.current) {
+      if (hoverEnabled) {
+        // Gentle floating animation
+        const hoverY = Math.sin(time * 0.8) * 0.08;
+        const hoverX = Math.sin(time * 0.5) * 0.03;
+        rootRef.current.position.y = hoverY;
+        rootRef.current.position.x = hoverX;
+        // Slight tilt while floating
+        rootRef.current.rotation.z = Math.sin(time * 0.3) * 0.02;
+      } else {
+        // Walking - stay grounded
+        rootRef.current.position.y = THREE.MathUtils.lerp(rootRef.current.position.y, 0, 0.1);
+        rootRef.current.position.x = THREE.MathUtils.lerp(rootRef.current.position.x, 0, 0.1);
+        rootRef.current.rotation.z = THREE.MathUtils.lerp(rootRef.current.rotation.z, 0, 0.1);
+      }
     }
     
     // === EYE BLINK ANIMATION ===
@@ -271,7 +279,7 @@ function RobotModel({
       blink.blinkProgress += delta * 12;
       if (blink.blinkProgress >= 1) {
         blink.blinking = false;
-        blink.nextBlink = 2 + Math.random() * 4; // Random 2-6 second interval
+        blink.nextBlink = 2 + Math.random() * 4;
       }
     }
     const eyeScale = blink.blinking 
@@ -282,21 +290,27 @@ function RobotModel({
     
     // === BODY MOTION ===
     if (bodyRef.current) {
-      // Vertical bob - humans bob twice per stride (once per foot strike)
-      const verticalBob = Math.abs(Math.sin(walkCycle * 2)) * 0.018;
-      bodyRef.current.position.y = -0.3 + verticalBob;
-      
-      // Lateral sway - weight shifts side to side with each step
-      const lateralSway = Math.sin(walkCycle) * 0.018;
-      bodyRef.current.position.x = lateralSway * 0.3;
-      bodyRef.current.rotation.z = lateralSway * 0.8;
-      
-      // Pelvic rotation - hips rotate opposite to shoulders
-      const pelvicRotation = Math.sin(walkCycle) * 0.04;
-      bodyRef.current.rotation.y = pelvicRotation;
-      
-      // Slight forward lean while walking
-      bodyRef.current.rotation.x = 0.02;
+      if (isWalking) {
+        // Walking body motion
+        const verticalBob = Math.abs(Math.sin(walkCycle * 2)) * 0.018;
+        bodyRef.current.position.y = -0.3 + verticalBob;
+        
+        const lateralSway = Math.sin(walkCycle) * 0.018;
+        bodyRef.current.position.x = lateralSway * 0.3;
+        bodyRef.current.rotation.z = lateralSway * 0.8;
+        
+        const pelvicRotation = Math.sin(walkCycle) * 0.04;
+        bodyRef.current.rotation.y = pelvicRotation;
+        bodyRef.current.rotation.x = 0.02;
+      } else {
+        // Standing/hovering - subtle idle breathing
+        const breathe = Math.sin(time * 1.2) * 0.005;
+        bodyRef.current.position.y = THREE.MathUtils.lerp(bodyRef.current.position.y, -0.3 + breathe, 0.05);
+        bodyRef.current.position.x = THREE.MathUtils.lerp(bodyRef.current.position.x, 0, 0.05);
+        bodyRef.current.rotation.z = THREE.MathUtils.lerp(bodyRef.current.rotation.z, 0, 0.05);
+        bodyRef.current.rotation.y = THREE.MathUtils.lerp(bodyRef.current.rotation.y, 0, 0.05);
+        bodyRef.current.rotation.x = THREE.MathUtils.lerp(bodyRef.current.rotation.x, 0, 0.05);
+      }
       
       // Lovable mode: extra happy bounce
       if (mode === "lovable") {
@@ -305,40 +319,52 @@ function RobotModel({
     }
 
     // === LEG MOTION ===
-    // Human gait: swing phase (leg moving forward) and stance phase (leg on ground)
     if (leftLegRef.current) {
-      // Left leg swing with slight ease-in-out feel
-      const leftSwing = Math.sin(walkCycle) * strideLength;
-      leftLegRef.current.rotation.x = leftSwing;
-      // Slight outward rotation during swing
-      leftLegRef.current.rotation.z = Math.sin(walkCycle) > 0 ? -0.02 : 0;
+      if (isWalking) {
+        const leftSwing = Math.sin(walkCycle) * strideLength;
+        leftLegRef.current.rotation.x = leftSwing;
+        leftLegRef.current.rotation.z = Math.sin(walkCycle) > 0 ? -0.02 : 0;
+      } else {
+        // Standing still
+        leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, 0.08);
+        leftLegRef.current.rotation.z = THREE.MathUtils.lerp(leftLegRef.current.rotation.z, 0, 0.08);
+      }
     }
     if (rightLegRef.current) {
-      const rightSwing = Math.sin(walkCycle + Math.PI) * strideLength;
-      rightLegRef.current.rotation.x = rightSwing;
-      rightLegRef.current.rotation.z = Math.sin(walkCycle + Math.PI) > 0 ? 0.02 : 0;
+      if (isWalking) {
+        const rightSwing = Math.sin(walkCycle + Math.PI) * strideLength;
+        rightLegRef.current.rotation.x = rightSwing;
+        rightLegRef.current.rotation.z = Math.sin(walkCycle + Math.PI) > 0 ? 0.02 : 0;
+      } else {
+        rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, 0.08);
+        rightLegRef.current.rotation.z = THREE.MathUtils.lerp(rightLegRef.current.rotation.z, 0, 0.08);
+      }
     }
     
     // Knee bend - bends during swing phase, extends during stance
-    // Humans bend knee more when leg swings back, less when forward
     if (leftKneeRef.current) {
-      const leftPhase = Math.sin(walkCycle);
-      // Knee bends when leg swings back (negative phase)
-      const kneeBend = leftPhase < 0 ? Math.abs(leftPhase) * 0.45 : Math.abs(leftPhase) * 0.1;
-      leftKneeRef.current.rotation.x = kneeBend;
+      if (isWalking) {
+        const leftPhase = Math.sin(walkCycle);
+        const kneeBend = leftPhase < 0 ? Math.abs(leftPhase) * 0.45 : Math.abs(leftPhase) * 0.1;
+        leftKneeRef.current.rotation.x = kneeBend;
+      } else {
+        leftKneeRef.current.rotation.x = THREE.MathUtils.lerp(leftKneeRef.current.rotation.x, 0, 0.08);
+      }
     }
     if (rightKneeRef.current) {
-      const rightPhase = Math.sin(walkCycle + Math.PI);
-      const kneeBend = rightPhase < 0 ? Math.abs(rightPhase) * 0.45 : Math.abs(rightPhase) * 0.1;
-      rightKneeRef.current.rotation.x = kneeBend;
+      if (isWalking) {
+        const rightPhase = Math.sin(walkCycle + Math.PI);
+        const kneeBend = rightPhase < 0 ? Math.abs(rightPhase) * 0.45 : Math.abs(rightPhase) * 0.1;
+        rightKneeRef.current.rotation.x = kneeBend;
+      } else {
+        rightKneeRef.current.rotation.x = THREE.MathUtils.lerp(rightKneeRef.current.rotation.x, 0, 0.08);
+      }
     }
 
     // === HEAD MOTION ===
     if (headRef.current) {
-      // Head stabilization - humans keep head steady, it counter-rotates against body
-      // This is a key human trait - vestibulo-ocular reflex
-      const headCounterRotation = -Math.sin(walkCycle) * 0.02;
-      const headVerticalStabilization = -Math.abs(Math.sin(walkCycle * 2)) * 0.01;
+      const headCounterRotation = isWalking ? -Math.sin(walkCycle) * 0.02 : 0;
+      const headVerticalStabilization = isWalking ? -Math.abs(Math.sin(walkCycle * 2)) * 0.01 : 0;
       
       headRef.current.rotation.x = THREE.MathUtils.lerp(
         headRef.current.rotation.x,
@@ -352,7 +378,7 @@ function RobotModel({
       );
       headRef.current.rotation.y = THREE.MathUtils.lerp(
         headRef.current.rotation.y,
-        (headRotation.y * Math.PI) / 180 - Math.sin(walkCycle) * 0.015,
+        (headRotation.y * Math.PI) / 180 - (isWalking ? Math.sin(walkCycle) * 0.015 : 0),
         0.1
       );
     }
@@ -385,7 +411,7 @@ function RobotModel({
 
     // === ARM MOTION ===
     // Human arm swing: arms swing opposite to legs (contralateral pattern)
-    const armSwingAmplitude = 0.22;
+    const armSwingAmplitude = isWalking ? 0.22 : 0;
     
     // Calculate user input influence
     const leftArmUserInput = Math.abs(armRotation.leftY) + Math.abs(armRotation.leftX);
@@ -394,14 +420,14 @@ function RobotModel({
     const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 25);
     
     // Mode-specific arm animations
-    const isWaving = mode === "waving" || mode === "lovable";
+    const isWavingMode = mode === "waving" || mode === "lovable";
     const isDumbbell = mode === "dumbbell";
     
     if (leftArmRef.current) {
       if (isDumbbell) {
         // Dumbbell curling motion
-        const curlPhase = Math.sin(time * 2) * 0.5 + 0.5; // 0 to 1
-        const curlAngle = -1.2 - curlPhase * 0.8; // Arm raised, curling
+        const curlPhase = Math.sin(time * 2) * 0.5 + 0.5;
+        const curlAngle = -1.2 - curlPhase * 0.8;
         leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
           leftArmRef.current.rotation.x,
           curlAngle,
@@ -425,8 +451,8 @@ function RobotModel({
           0.8 + wavePhase,
           0.1
         );
-      } else {
-        // Normal walking swing
+      } else if (isWalking) {
+        // Walking arm swing
         const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
         leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
           leftArmRef.current.rotation.x,
@@ -440,10 +466,22 @@ function RobotModel({
           0.12 + swingOutward * leftSwingReduction + (armRotation.leftX * Math.PI) / 180 + userRaise,
           0.1
         );
+      } else {
+        // Standing idle - relaxed arms at sides
+        leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.x,
+          (armRotation.leftY * Math.PI) / 180,
+          0.08
+        );
+        leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          leftArmRef.current.rotation.z,
+          0.12 + (armRotation.leftX * Math.PI) / 180,
+          0.08
+        );
       }
       
       // Shoulder position
-      const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
+      const armSwing = isWalking ? Math.sin(walkCycle + Math.PI) * 0.22 * leftSwingReduction : 0;
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
         leftArmRef.current.position.y,
         1.65 + shoulderCompress.left * 0.01 + (armSwing < 0 ? 0.01 : 0),
@@ -452,7 +490,7 @@ function RobotModel({
     }
 
     if (rightArmRef.current) {
-      if (isWaving) {
+      if (isWavingMode) {
         // Enthusiastic waving gesture
         const waveSpeed = mode === "lovable" ? 7 : 5;
         const wavePhase = Math.sin(time * waveSpeed) * 0.5;
@@ -467,8 +505,8 @@ function RobotModel({
           0.12
         );
       } else if (isDumbbell) {
-        // Mirror arm for support
-        const armSwing = Math.sin(walkCycle) * armSwingAmplitude * 0.5;
+        // Mirror arm for support - stays still when standing
+        const armSwing = isWalking ? Math.sin(walkCycle) * armSwingAmplitude * 0.5 : 0;
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
           rightArmRef.current.rotation.x,
           armSwing,
@@ -479,8 +517,8 @@ function RobotModel({
           -0.12,
           0.1
         );
-      } else {
-        // Normal walking swing
+      } else if (isWalking) {
+        // Walking arm swing
         const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
           rightArmRef.current.rotation.x,
@@ -494,10 +532,22 @@ function RobotModel({
           -0.12 + swingOutward * rightSwingReduction + (armRotation.rightX * Math.PI) / 180 - userRaise,
           0.1
         );
+      } else {
+        // Standing idle - relaxed arms
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.x,
+          (armRotation.rightY * Math.PI) / 180,
+          0.08
+        );
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+          rightArmRef.current.rotation.z,
+          -0.12 + (armRotation.rightX * Math.PI) / 180,
+          0.08
+        );
       }
       
       // Shoulder position
-      const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
+      const armSwing = isWalking ? Math.sin(walkCycle) * 0.22 * rightSwingReduction : 0;
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
         rightArmRef.current.position.y,
         1.65 + shoulderCompress.right * 0.01 + (armSwing < 0 ? 0.01 : 0),
@@ -535,7 +585,7 @@ function RobotModel({
       }
     }
     if (rightElbowRef.current) {
-      if (isWaving) {
+      if (isWavingMode) {
         // Wave elbow bend
         const wavePhase = Math.sin(time * (mode === "lovable" ? 7 : 5)) * 0.3;
         rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
