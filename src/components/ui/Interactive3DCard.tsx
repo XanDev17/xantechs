@@ -123,7 +123,7 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
       />
       
       {/* Content wrapper */}
-      <div className="flex h-full min-h-[400px] md:min-h-[500px]">
+      <div className="flex h-full min-h-[450px] md:min-h-[550px]">
         {/* Text content */}
         <div className="flex-1 p-8 md:p-12 relative z-10 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
@@ -138,28 +138,30 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
         {/* 3D Robot Figure */}
         <div 
           ref={robotRef}
-          className="flex-1 relative hidden md:flex items-center justify-center overflow-hidden"
+          className="flex-1 relative hidden md:flex items-end justify-center overflow-visible"
+          style={{ minHeight: "500px" }}
         >
           {/* Glow background */}
-          <div className="absolute w-72 h-72 bg-blue-500/20 rounded-full blur-[100px] animate-pulse" />
-          <div className="absolute w-48 h-48 bg-cyan-400/15 rounded-full blur-[60px] animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-500/10 rounded-full blur-[80px]" />
           
-          {/* 3D Canvas */}
-          <Suspense fallback={
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-            </div>
-          }>
-            <Robot3DCanvas
-              eyeOffset={eyeOffset}
-              headRotation={headRotation}
-              armRotation={armRotation}
-              fingerCurl={fingerCurl}
-              elbowBend={elbowBend}
-              shoulderCompress={shoulderCompress}
-              wristRotation={wristRotation}
-            />
-          </Suspense>
+          {/* 3D Canvas - full height container */}
+          <div className="absolute inset-0 w-full h-full">
+            <Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+              </div>
+            }>
+              <Robot3DCanvas
+                eyeOffset={eyeOffset}
+                headRotation={headRotation}
+                armRotation={armRotation}
+                fingerCurl={fingerCurl}
+                elbowBend={elbowBend}
+                shoulderCompress={shoulderCompress}
+                wristRotation={wristRotation}
+              />
+            </Suspense>
+          </div>
         </div>
       </div>
 
