@@ -296,16 +296,19 @@ function RobotModel({
       );
     }
 
-    // Arms with natural motion
+    // Arms swing synchronized with walking (opposite to legs)
+    const armSwingAmplitude = 0.25;
+    
     if (leftArmRef.current) {
-      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
-        leftArmRef.current.rotation.z,
-        0.2 + (armRotation.leftX * Math.PI) / 180 + Math.sin(time * 0.9) * 0.03,
-        0.08
-      );
+      // Left arm swings opposite to left leg (same as right leg)
       leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
         leftArmRef.current.rotation.x,
-        (armRotation.leftY * Math.PI) / 180,
+        Math.sin(time * walkSpeed + Math.PI) * armSwingAmplitude + (armRotation.leftY * Math.PI) / 180,
+        0.1
+      );
+      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+        leftArmRef.current.rotation.z,
+        0.15 + (armRotation.leftX * Math.PI) / 180,
         0.08
       );
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
@@ -316,14 +319,15 @@ function RobotModel({
     }
 
     if (rightArmRef.current) {
-      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
-        rightArmRef.current.rotation.z,
-        -0.2 + (armRotation.rightX * Math.PI) / 180 + Math.sin(time * 0.9 + Math.PI) * 0.03,
-        0.08
-      );
+      // Right arm swings opposite to right leg (same as left leg)
       rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
         rightArmRef.current.rotation.x,
-        (armRotation.rightY * Math.PI) / 180,
+        Math.sin(time * walkSpeed) * armSwingAmplitude + (armRotation.rightY * Math.PI) / 180,
+        0.1
+      );
+      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+        rightArmRef.current.rotation.z,
+        -0.15 + (armRotation.rightX * Math.PI) / 180,
         0.08
       );
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
@@ -333,22 +337,23 @@ function RobotModel({
       );
     }
 
-    // Elbows - keep straight by default
+    // Elbow bend increases when arm swings back
     if (leftElbowRef.current) {
+      const leftArmPhase = Math.sin(time * walkSpeed + Math.PI);
       leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         leftElbowRef.current.rotation.x,
-        (elbowBend * Math.PI) / 180 * 0.3,
-        0.08
+        leftArmPhase > 0 ? leftArmPhase * 0.4 : 0.05,
+        0.1
       );
     }
     if (rightElbowRef.current) {
+      const rightArmPhase = Math.sin(time * walkSpeed);
       rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         rightElbowRef.current.rotation.x,
-        (elbowBend * Math.PI) / 180 * 0.3,
-        0.08
+        rightArmPhase > 0 ? rightArmPhase * 0.4 : 0.05,
+        0.1
       );
     }
-
     // Wrists
     if (leftWristRef.current) {
       leftWristRef.current.rotation.z = THREE.MathUtils.lerp(
