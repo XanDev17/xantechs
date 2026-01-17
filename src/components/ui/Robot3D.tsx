@@ -783,6 +783,17 @@ function RobotModel({
         </mesh>
       </group>
 
+      {/* ========== GROUND SHADOW ========== */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.85, 0]} receiveShadow>
+        <circleGeometry args={[0.45, 32]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.25} />
+      </mesh>
+      {/* Secondary softer shadow */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.86, 0]} scale={[1.4, 1, 1]}>
+        <circleGeometry args={[0.5, 32]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.1} />
+      </mesh>
+
       {/* ========== LIGHTING ========== */}
       <pointLight position={[-1.5, 1, -1]} color="#ffffff" intensity={0.5} distance={5} />
       <pointLight position={[1.5, 1, -1]} color="#ffffff" intensity={0.5} distance={5} />
