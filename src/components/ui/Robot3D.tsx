@@ -136,6 +136,8 @@ function RobotModel({
   const bodyRef = useRef<THREE.Group>(null);
   const leftLegRef = useRef<THREE.Group>(null);
   const rightLegRef = useRef<THREE.Group>(null);
+  const leftKneeRef = useRef<THREE.Group>(null);
+  const rightKneeRef = useRef<THREE.Group>(null);
 
   // Biomechanical materials
   const armorMaterial = useMemo(
@@ -233,12 +235,19 @@ function RobotModel({
       bodyRef.current.rotation.z = Math.sin(time * 0.8) * 0.015;
     }
 
-    // Leg movement during hover
+    // Leg movement during hover - hip rotation
     if (leftLegRef.current) {
-      leftLegRef.current.rotation.x = Math.sin(time * 1.5) * 0.08;
+      leftLegRef.current.rotation.x = Math.sin(time * 1.5) * 0.1;
     }
     if (rightLegRef.current) {
-      rightLegRef.current.rotation.x = Math.sin(time * 1.5 + Math.PI) * 0.08;
+      rightLegRef.current.rotation.x = Math.sin(time * 1.5 + Math.PI) * 0.1;
+    }
+    // Knee bend during hover
+    if (leftKneeRef.current) {
+      leftKneeRef.current.rotation.x = Math.abs(Math.sin(time * 1.5)) * 0.15;
+    }
+    if (rightKneeRef.current) {
+      rightKneeRef.current.rotation.x = Math.abs(Math.sin(time * 1.5 + Math.PI)) * 0.15;
     }
 
     // Head rotation with tracking
@@ -295,7 +304,7 @@ function RobotModel({
       );
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
         leftArmRef.current.position.y,
-        0.5 + shoulderCompress.left * 0.008,
+        1.65 + shoulderCompress.left * 0.008,
         0.08
       );
     }
@@ -313,7 +322,7 @@ function RobotModel({
       );
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
         rightArmRef.current.position.y,
-        0.5 + shoulderCompress.right * 0.008,
+        1.65 + shoulderCompress.right * 0.008,
         0.08
       );
     }
@@ -498,7 +507,7 @@ function RobotModel({
       </group>
 
       {/* ========== LEFT ARM ========== */}
-      <group ref={leftArmRef} position={[-0.52, 0.5, 0]}>
+      <group ref={leftArmRef} position={[-0.52, 1.65, 0]}>
         {/* Shoulder joint - ball */}
         <mesh material={jointMaterial}>
           <sphereGeometry args={[0.1, 32, 32]} />
@@ -563,7 +572,7 @@ function RobotModel({
       </group>
 
       {/* ========== RIGHT ARM ========== */}
-      <group ref={rightArmRef} position={[0.52, 0.5, 0]}>
+      <group ref={rightArmRef} position={[0.52, 1.65, 0]}>
         {/* Shoulder joint */}
         <mesh material={jointMaterial}>
           <sphereGeometry args={[0.1, 32, 32]} />
@@ -645,36 +654,39 @@ function RobotModel({
           <capsuleGeometry args={[0.018, 0.18, 8, 16]} />
         </mesh>
         
-        {/* Knee */}
-        <mesh position={[0, -0.44, 0]} material={jointMaterial}>
-          <sphereGeometry args={[0.07, 32, 32]} />
-        </mesh>
-        {/* Knee cap armor */}
-        <mesh position={[0, -0.44, 0.06]} material={ceramicMaterial}>
-          <sphereGeometry args={[0.055, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        </mesh>
-        
-        {/* Lower leg */}
-        <mesh position={[0, -0.72, 0]} material={armorMaterial}>
-          <capsuleGeometry args={[0.07, 0.35, 16, 32]} />
-        </mesh>
-        {/* Shin plate */}
-        <ArmorPlate position={[0, -0.68, 0.06]} size={[0.08, 0.25, 0.03]} material={ceramicMaterial} />
-        {/* Calf hydraulic */}
-        <mesh position={[0, -0.65, -0.05]} material={hydraulicMaterial}>
-          <capsuleGeometry args={[0.02, 0.2, 8, 16]} />
-        </mesh>
-        
-        {/* Ankle */}
-        <mesh position={[0, -0.98, 0]} material={jointMaterial}>
-          <sphereGeometry args={[0.05, 32, 32]} />
-        </mesh>
-        {/* Foot */}
-        <mesh position={[0, -1.05, 0.04]} material={armorMaterial}>
-          <boxGeometry args={[0.11, 0.06, 0.18]} />
-        </mesh>
-        {/* Foot thruster */}
-        <Thruster position={[0, -1.12, 0]} scale={1.2} />
+        {/* Knee + Lower Leg */}
+        <group ref={leftKneeRef} position={[0, -0.44, 0]}>
+          {/* Knee joint */}
+          <mesh material={jointMaterial}>
+            <sphereGeometry args={[0.07, 32, 32]} />
+          </mesh>
+          {/* Knee cap armor */}
+          <mesh position={[0, 0, 0.06]} material={ceramicMaterial}>
+            <sphereGeometry args={[0.055, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          </mesh>
+          
+          {/* Lower leg */}
+          <mesh position={[0, -0.28, 0]} material={armorMaterial}>
+            <capsuleGeometry args={[0.07, 0.35, 16, 32]} />
+          </mesh>
+          {/* Shin plate */}
+          <ArmorPlate position={[0, -0.24, 0.06]} size={[0.08, 0.25, 0.03]} material={ceramicMaterial} />
+          {/* Calf hydraulic */}
+          <mesh position={[0, -0.21, -0.05]} material={hydraulicMaterial}>
+            <capsuleGeometry args={[0.02, 0.2, 8, 16]} />
+          </mesh>
+          
+          {/* Ankle */}
+          <mesh position={[0, -0.54, 0]} material={jointMaterial}>
+            <sphereGeometry args={[0.05, 32, 32]} />
+          </mesh>
+          {/* Foot */}
+          <mesh position={[0, -0.61, 0.04]} material={armorMaterial}>
+            <boxGeometry args={[0.11, 0.06, 0.18]} />
+          </mesh>
+          {/* Foot thruster */}
+          <Thruster position={[0, -0.68, 0]} scale={1.2} />
+        </group>
       </group>
 
       {/* ========== RIGHT LEG ========== */}
@@ -695,36 +707,39 @@ function RobotModel({
           <capsuleGeometry args={[0.018, 0.18, 8, 16]} />
         </mesh>
         
-        {/* Knee */}
-        <mesh position={[0, -0.44, 0]} material={jointMaterial}>
-          <sphereGeometry args={[0.07, 32, 32]} />
-        </mesh>
-        {/* Knee cap */}
-        <mesh position={[0, -0.44, 0.06]} material={ceramicMaterial}>
-          <sphereGeometry args={[0.055, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        </mesh>
-        
-        {/* Lower leg */}
-        <mesh position={[0, -0.72, 0]} material={armorMaterial}>
-          <capsuleGeometry args={[0.07, 0.35, 16, 32]} />
-        </mesh>
-        {/* Shin plate */}
-        <ArmorPlate position={[0, -0.68, 0.06]} size={[0.08, 0.25, 0.03]} material={ceramicMaterial} />
-        {/* Calf hydraulic */}
-        <mesh position={[0, -0.65, -0.05]} material={hydraulicMaterial}>
-          <capsuleGeometry args={[0.02, 0.2, 8, 16]} />
-        </mesh>
-        
-        {/* Ankle */}
-        <mesh position={[0, -0.98, 0]} material={jointMaterial}>
-          <sphereGeometry args={[0.05, 32, 32]} />
-        </mesh>
-        {/* Foot */}
-        <mesh position={[0, -1.05, 0.04]} material={armorMaterial}>
-          <boxGeometry args={[0.11, 0.06, 0.18]} />
-        </mesh>
-        {/* Foot thruster */}
-        <Thruster position={[0, -1.12, 0]} scale={1.2} />
+        {/* Knee + Lower Leg */}
+        <group ref={rightKneeRef} position={[0, -0.44, 0]}>
+          {/* Knee joint */}
+          <mesh material={jointMaterial}>
+            <sphereGeometry args={[0.07, 32, 32]} />
+          </mesh>
+          {/* Knee cap */}
+          <mesh position={[0, 0, 0.06]} material={ceramicMaterial}>
+            <sphereGeometry args={[0.055, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          </mesh>
+          
+          {/* Lower leg */}
+          <mesh position={[0, -0.28, 0]} material={armorMaterial}>
+            <capsuleGeometry args={[0.07, 0.35, 16, 32]} />
+          </mesh>
+          {/* Shin plate */}
+          <ArmorPlate position={[0, -0.24, 0.06]} size={[0.08, 0.25, 0.03]} material={ceramicMaterial} />
+          {/* Calf hydraulic */}
+          <mesh position={[0, -0.21, -0.05]} material={hydraulicMaterial}>
+            <capsuleGeometry args={[0.02, 0.2, 8, 16]} />
+          </mesh>
+          
+          {/* Ankle */}
+          <mesh position={[0, -0.54, 0]} material={jointMaterial}>
+            <sphereGeometry args={[0.05, 32, 32]} />
+          </mesh>
+          {/* Foot */}
+          <mesh position={[0, -0.61, 0.04]} material={armorMaterial}>
+            <boxGeometry args={[0.11, 0.06, 0.18]} />
+          </mesh>
+          {/* Foot thruster */}
+          <Thruster position={[0, -0.68, 0]} scale={1.2} />
+        </group>
       </group>
 
       {/* ========== BACK THRUSTERS ========== */}
