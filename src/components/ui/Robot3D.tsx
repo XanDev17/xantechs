@@ -318,18 +318,18 @@ function RobotModel({
       );
     }
 
-    // Elbows
+    // Elbows - keep straight by default
     if (leftElbowRef.current) {
       leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         leftElbowRef.current.rotation.x,
-        (elbowBend * Math.PI) / 180 - 0.3,
+        (elbowBend * Math.PI) / 180 * 0.3,
         0.08
       );
     }
     if (rightElbowRef.current) {
       rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         rightElbowRef.current.rotation.x,
-        (elbowBend * Math.PI) / 180 - 0.3,
+        (elbowBend * Math.PI) / 180 * 0.3,
         0.08
       );
     }
