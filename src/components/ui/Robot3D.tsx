@@ -312,62 +312,80 @@ function RobotModel({
       );
     }
 
-    // Arms swing synchronized with walking (opposite to legs)
+    // Arms - blend walking swing with user input
     const armSwingAmplitude = 0.25;
     
+    // Calculate how much user is trying to raise arms (reduces walk swing)
+    const leftArmUserInput = Math.abs(armRotation.leftY) + Math.abs(armRotation.leftX);
+    const rightArmUserInput = Math.abs(armRotation.rightY) + Math.abs(armRotation.rightX);
+    const leftSwingReduction = Math.max(0, 1 - leftArmUserInput / 30);
+    const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 30);
+    
     if (leftArmRef.current) {
-      // Left arm swings opposite to left leg (same as right leg)
+      // Walk swing reduced when user provides input
+      const walkSwing = Math.sin(time * walkSpeed + Math.PI) * armSwingAmplitude * leftSwingReduction;
+      
+      // User input for raising arm (negative Y = raise up)
+      // rotation.x = forward/back swing + user forward/back
+      // rotation.z = sideways raise (positive = raise outward for left arm)
       leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
         leftArmRef.current.rotation.x,
-        Math.sin(time * walkSpeed + Math.PI) * armSwingAmplitude + (armRotation.leftY * Math.PI) / 180,
-        0.1
+        walkSwing + (armRotation.leftY * Math.PI) / 180,
+        0.12
       );
+      // Raise arm outward when cursor is above (armRotation.leftY is negative when above)
+      const sideRaise = Math.max(0, -armRotation.leftY) * 0.015;
       leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
         leftArmRef.current.rotation.z,
-        0.15 + (armRotation.leftX * Math.PI) / 180,
-        0.08
+        0.15 + (armRotation.leftX * Math.PI) / 180 + sideRaise,
+        0.12
       );
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
         leftArmRef.current.position.y,
-        1.65 + shoulderCompress.left * 0.008,
+        1.65 + shoulderCompress.left * 0.01,
         0.08
       );
     }
 
     if (rightArmRef.current) {
-      // Right arm swings opposite to right leg (same as left leg)
+      const walkSwing = Math.sin(time * walkSpeed) * armSwingAmplitude * rightSwingReduction;
+      
       rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
         rightArmRef.current.rotation.x,
-        Math.sin(time * walkSpeed) * armSwingAmplitude + (armRotation.rightY * Math.PI) / 180,
-        0.1
+        walkSwing + (armRotation.rightY * Math.PI) / 180,
+        0.12
       );
+      // Raise arm outward when cursor is above (negative = raise outward for right arm)
+      const sideRaise = Math.max(0, -armRotation.rightY) * 0.015;
       rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
         rightArmRef.current.rotation.z,
-        -0.15 + (armRotation.rightX * Math.PI) / 180,
-        0.08
+        -0.15 + (armRotation.rightX * Math.PI) / 180 - sideRaise,
+        0.12
       );
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
         rightArmRef.current.position.y,
-        1.65 + shoulderCompress.right * 0.008,
+        1.65 + shoulderCompress.right * 0.01,
         0.08
       );
     }
 
-    // Elbow bend increases when arm swings back
+    // Elbow bend increases when arm swings back OR when user raises arm
     if (leftElbowRef.current) {
-      const leftArmPhase = Math.sin(time * walkSpeed + Math.PI);
+      const leftArmPhase = Math.sin(time * walkSpeed + Math.PI) * leftSwingReduction;
+      const userBend = Math.max(0, -armRotation.leftY / 60) * 0.6;
       leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         leftElbowRef.current.rotation.x,
-        leftArmPhase > 0 ? leftArmPhase * 0.4 : 0.05,
-        0.1
+        (leftArmPhase > 0 ? leftArmPhase * 0.4 : 0.05) + userBend + (elbowBend * Math.PI) / 180 * 0.5,
+        0.12
       );
     }
     if (rightElbowRef.current) {
-      const rightArmPhase = Math.sin(time * walkSpeed);
+      const rightArmPhase = Math.sin(time * walkSpeed) * rightSwingReduction;
+      const userBend = Math.max(0, -armRotation.rightY / 60) * 0.6;
       rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         rightElbowRef.current.rotation.x,
-        rightArmPhase > 0 ? rightArmPhase * 0.4 : 0.05,
-        0.1
+        (rightArmPhase > 0 ? rightArmPhase * 0.4 : 0.05) + userBend + (elbowBend * Math.PI) / 180 * 0.5,
+        0.12
       );
     }
     // Wrists
