@@ -1,5 +1,7 @@
 import { useRef, useState, Suspense } from "react";
-import Robot3DCanvas from "./Robot3D";
+import Robot3DCanvas, { RobotMode } from "./Robot3D";
+import { Button } from "./button";
+import { Hand, Dumbbell, Heart, User, Zap } from "lucide-react";
 
 interface SpotlightCardProps {
   children?: React.ReactNode;
@@ -14,10 +16,14 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
   const [headRotation, setHeadRotation] = useState({ x: 0, y: 0 });
   const [armRotation, setArmRotation] = useState({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
-  const [fingerCurl, setFingerCurl] = useState(0); // 0 = open, 1 = closed
-  const [elbowBend, setElbowBend] = useState(0); // 0 = straight, higher = more bent
-  const [shoulderCompress, setShoulderCompress] = useState({ left: 0, right: 0 }); // shoulder shrug/compression
-  const [wristRotation, setWristRotation] = useState({ left: 0, right: 0 }); // wrist twist for waving
+  const [fingerCurl, setFingerCurl] = useState(0);
+  const [elbowBend, setElbowBend] = useState(0);
+  const [shoulderCompress, setShoulderCompress] = useState({ left: 0, right: 0 });
+  const [wristRotation, setWristRotation] = useState({ left: 0, right: 0 });
+  
+  // Robot personality modes
+  const [mode, setMode] = useState<RobotMode>("normal");
+  const [hoverEnabled, setHoverEnabled] = useState(true);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !robotRef.current) return;
@@ -132,6 +138,56 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
           <p className="mt-4 text-neutral-400 max-w-md text-base md:text-lg leading-relaxed">
             Bring your ideas to life with cutting-edge technology. We create immersive digital experiences that captivate and convert.
           </p>
+          
+          {/* Robot Mode Controls */}
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant={mode === "normal" ? "default" : "outline"}
+              onClick={() => setMode("normal")}
+              className="gap-1.5 text-xs"
+            >
+              <User className="w-3.5 h-3.5" />
+              Normal
+            </Button>
+            <Button
+              size="sm"
+              variant={mode === "waving" ? "default" : "outline"}
+              onClick={() => setMode("waving")}
+              className="gap-1.5 text-xs"
+            >
+              <Hand className="w-3.5 h-3.5" />
+              Waving
+            </Button>
+            <Button
+              size="sm"
+              variant={mode === "dumbbell" ? "default" : "outline"}
+              onClick={() => setMode("dumbbell")}
+              className="gap-1.5 text-xs"
+            >
+              <Dumbbell className="w-3.5 h-3.5" />
+              Workout
+            </Button>
+            <Button
+              size="sm"
+              variant={mode === "lovable" ? "default" : "outline"}
+              onClick={() => setMode("lovable")}
+              className="gap-1.5 text-xs"
+            >
+              <Heart className="w-3.5 h-3.5" />
+              Lovable
+            </Button>
+            <Button
+              size="sm"
+              variant={hoverEnabled ? "default" : "outline"}
+              onClick={() => setHoverEnabled(!hoverEnabled)}
+              className="gap-1.5 text-xs"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              Hover
+            </Button>
+          </div>
+          
           {children}
         </div>
 
@@ -159,6 +215,8 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                 elbowBend={elbowBend}
                 shoulderCompress={shoulderCompress}
                 wristRotation={wristRotation}
+                mode={mode}
+                hoverEnabled={hoverEnabled}
               />
             </Suspense>
           </div>
