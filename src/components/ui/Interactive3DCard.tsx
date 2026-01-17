@@ -1,6 +1,5 @@
-import { useRef, useState, lazy, Suspense } from "react";
-
-const Robot3DCanvas = lazy(() => import("./Robot3D"));
+import { useRef, useState, Suspense } from "react";
+import Robot3DCanvas from "./Robot3D";
 
 interface SpotlightCardProps {
   children?: React.ReactNode;
