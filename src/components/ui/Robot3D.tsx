@@ -225,64 +225,87 @@ function RobotModel({
     []
   );
 
-  // Animate with walking motion
+  // Human-like walking animation
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     
-    // Walking speed constant
-    const walkSpeed = 2.5;
-    const walkAmplitude = 0.35;
+    // Walking parameters - slower, more natural pace
+    const walkSpeed = 1.8; // Slower for more realistic human gait
+    const strideLength = 0.28; // How far legs swing
     
-    // Body sway and bob synchronized with walking
+    // Walking cycle phase (0 to 2π)
+    const walkCycle = time * walkSpeed;
+    
+    // === BODY MOTION ===
     if (bodyRef.current) {
-      // Side-to-side sway (shifts weight with each step)
-      bodyRef.current.rotation.z = Math.sin(time * walkSpeed) * 0.025;
-      // Forward lean
-      bodyRef.current.rotation.x = 0.03;
-      // Vertical bob (double frequency - bob on each step)
-      bodyRef.current.position.y = -0.3 + Math.abs(Math.sin(time * walkSpeed * 2)) * 0.025;
-      // Slight hip rotation
-      bodyRef.current.rotation.y = Math.sin(time * walkSpeed) * 0.02;
+      // Vertical bob - humans bob twice per stride (once per foot strike)
+      // Lowest point when foot strikes, highest at mid-stance
+      const verticalBob = Math.abs(Math.sin(walkCycle * 2)) * 0.018;
+      bodyRef.current.position.y = -0.3 + verticalBob;
+      
+      // Lateral sway - weight shifts side to side with each step
+      const lateralSway = Math.sin(walkCycle) * 0.018;
+      bodyRef.current.position.x = lateralSway * 0.3;
+      bodyRef.current.rotation.z = lateralSway * 0.8;
+      
+      // Pelvic rotation - hips rotate opposite to shoulders
+      const pelvicRotation = Math.sin(walkCycle) * 0.04;
+      bodyRef.current.rotation.y = pelvicRotation;
+      
+      // Slight forward lean while walking
+      bodyRef.current.rotation.x = 0.02;
     }
 
-    // Walking animation for legs
-    // Left leg - forward/backward swing
+    // === LEG MOTION ===
+    // Human gait: swing phase (leg moving forward) and stance phase (leg on ground)
     if (leftLegRef.current) {
-      leftLegRef.current.rotation.x = Math.sin(time * walkSpeed) * walkAmplitude;
+      // Left leg swing with slight ease-in-out feel
+      const leftSwing = Math.sin(walkCycle) * strideLength;
+      leftLegRef.current.rotation.x = leftSwing;
+      // Slight outward rotation during swing
+      leftLegRef.current.rotation.z = Math.sin(walkCycle) > 0 ? -0.02 : 0;
     }
     if (rightLegRef.current) {
-      rightLegRef.current.rotation.x = Math.sin(time * walkSpeed + Math.PI) * walkAmplitude;
+      const rightSwing = Math.sin(walkCycle + Math.PI) * strideLength;
+      rightLegRef.current.rotation.x = rightSwing;
+      rightLegRef.current.rotation.z = Math.sin(walkCycle + Math.PI) > 0 ? 0.02 : 0;
     }
-    // Knee bend during walking - bends when leg goes back
+    
+    // Knee bend - bends during swing phase, extends during stance
+    // Humans bend knee more when leg swings back, less when forward
     if (leftKneeRef.current) {
-      const leftPhase = Math.sin(time * walkSpeed);
-      leftKneeRef.current.rotation.x = leftPhase < 0 ? Math.abs(leftPhase) * 0.5 : 0.05;
+      const leftPhase = Math.sin(walkCycle);
+      // Knee bends when leg swings back (negative phase)
+      const kneeBend = leftPhase < 0 ? Math.abs(leftPhase) * 0.45 : Math.abs(leftPhase) * 0.1;
+      leftKneeRef.current.rotation.x = kneeBend;
     }
     if (rightKneeRef.current) {
-      const rightPhase = Math.sin(time * walkSpeed + Math.PI);
-      rightKneeRef.current.rotation.x = rightPhase < 0 ? Math.abs(rightPhase) * 0.5 : 0.05;
+      const rightPhase = Math.sin(walkCycle + Math.PI);
+      const kneeBend = rightPhase < 0 ? Math.abs(rightPhase) * 0.45 : Math.abs(rightPhase) * 0.1;
+      rightKneeRef.current.rotation.x = kneeBend;
     }
 
-    // Head bob and stabilization
+    // === HEAD MOTION ===
     if (headRef.current) {
-      // Head bobs opposite to body to simulate stabilization (like humans do)
-      const headBob = -Math.abs(Math.sin(time * walkSpeed * 2)) * 0.015;
-      // Slight look-ahead tilt
+      // Head stabilization - humans keep head steady, it counter-rotates against body
+      // This is a key human trait - vestibulo-ocular reflex
+      const headCounterRotation = -Math.sin(walkCycle) * 0.02;
+      const headVerticalStabilization = -Math.abs(Math.sin(walkCycle * 2)) * 0.01;
+      
       headRef.current.rotation.x = THREE.MathUtils.lerp(
         headRef.current.rotation.x,
-        (headRotation.x * Math.PI) / 180 + headBob - 0.05,
-        0.1
+        (headRotation.x * Math.PI) / 180 + headVerticalStabilization - 0.03,
+        0.12
       );
-      // Head counter-rotates slightly against body sway
       headRef.current.rotation.z = THREE.MathUtils.lerp(
         headRef.current.rotation.z,
-        -Math.sin(time * walkSpeed) * 0.015,
-        0.1
+        headCounterRotation,
+        0.12
       );
       headRef.current.rotation.y = THREE.MathUtils.lerp(
         headRef.current.rotation.y,
-        (headRotation.y * Math.PI) / 180,
-        0.08
+        (headRotation.y * Math.PI) / 180 - Math.sin(walkCycle) * 0.015,
+        0.1
       );
     }
 
@@ -312,82 +335,94 @@ function RobotModel({
       );
     }
 
-    // Arms - blend walking swing with user input
-    const armSwingAmplitude = 0.25;
+    // === ARM MOTION ===
+    // Human arm swing: arms swing opposite to legs (contralateral pattern)
+    // Right arm forward when left leg forward, with natural elbow bend
+    const armSwingAmplitude = 0.22;
     
-    // Calculate how much user is trying to raise arms (reduces walk swing)
+    // Calculate user input influence
     const leftArmUserInput = Math.abs(armRotation.leftY) + Math.abs(armRotation.leftX);
     const rightArmUserInput = Math.abs(armRotation.rightY) + Math.abs(armRotation.rightX);
-    const leftSwingReduction = Math.max(0, 1 - leftArmUserInput / 30);
-    const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 30);
+    const leftSwingReduction = Math.max(0, 1 - leftArmUserInput / 25);
+    const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 25);
     
     if (leftArmRef.current) {
-      // Walk swing reduced when user provides input
-      const walkSwing = Math.sin(time * walkSpeed + Math.PI) * armSwingAmplitude * leftSwingReduction;
+      // Left arm swings forward when right leg is forward (walkCycle + PI)
+      const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
       
-      // User input for raising arm (negative Y = raise up)
-      // rotation.x = forward/back swing + user forward/back
-      // rotation.z = sideways raise (positive = raise outward for left arm)
+      // Natural arm swing with slight outward arc at front of swing
       leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
         leftArmRef.current.rotation.x,
-        walkSwing + (armRotation.leftY * Math.PI) / 180,
-        0.12
+        armSwing + (armRotation.leftY * Math.PI) / 180,
+        0.1
       );
-      // Raise arm outward when cursor is above (armRotation.leftY is negative when above)
-      const sideRaise = Math.max(0, -armRotation.leftY) * 0.015;
+      
+      // Arm naturally swings slightly outward when moving forward
+      const swingOutward = Math.sin(walkCycle + Math.PI) > 0 ? 0.03 : 0;
+      const userRaise = Math.max(0, -armRotation.leftY) * 0.012;
       leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
         leftArmRef.current.rotation.z,
-        0.15 + (armRotation.leftX * Math.PI) / 180 + sideRaise,
-        0.12
+        0.12 + swingOutward * leftSwingReduction + (armRotation.leftX * Math.PI) / 180 + userRaise,
+        0.1
       );
+      
+      // Shoulder rises slightly when arm swings back
       leftArmRef.current.position.y = THREE.MathUtils.lerp(
         leftArmRef.current.position.y,
-        1.65 + shoulderCompress.left * 0.01,
-        0.08
+        1.65 + shoulderCompress.left * 0.01 + (armSwing < 0 ? 0.01 : 0),
+        0.1
       );
     }
 
     if (rightArmRef.current) {
-      const walkSwing = Math.sin(time * walkSpeed) * armSwingAmplitude * rightSwingReduction;
+      // Right arm swings forward when left leg is forward (walkCycle)
+      const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
       
       rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
         rightArmRef.current.rotation.x,
-        walkSwing + (armRotation.rightY * Math.PI) / 180,
-        0.12
+        armSwing + (armRotation.rightY * Math.PI) / 180,
+        0.1
       );
-      // Raise arm outward when cursor is above (negative = raise outward for right arm)
-      const sideRaise = Math.max(0, -armRotation.rightY) * 0.015;
+      
+      const swingOutward = Math.sin(walkCycle) > 0 ? -0.03 : 0;
+      const userRaise = Math.max(0, -armRotation.rightY) * 0.012;
       rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
         rightArmRef.current.rotation.z,
-        -0.15 + (armRotation.rightX * Math.PI) / 180 - sideRaise,
-        0.12
+        -0.12 + swingOutward * rightSwingReduction + (armRotation.rightX * Math.PI) / 180 - userRaise,
+        0.1
       );
+      
       rightArmRef.current.position.y = THREE.MathUtils.lerp(
         rightArmRef.current.position.y,
-        1.65 + shoulderCompress.right * 0.01,
-        0.08
+        1.65 + shoulderCompress.right * 0.01 + (armSwing < 0 ? 0.01 : 0),
+        0.1
       );
     }
 
-    // Elbow bend increases when arm swings back OR when user raises arm
+    // === ELBOW MOTION ===
+    // Elbows bend more when arm swings back (natural human gait)
     if (leftElbowRef.current) {
-      const leftArmPhase = Math.sin(time * walkSpeed + Math.PI) * leftSwingReduction;
-      const userBend = Math.max(0, -armRotation.leftY / 60) * 0.6;
+      const armPhase = Math.sin(walkCycle + Math.PI);
+      // Elbow bends when arm is behind body, extends when in front
+      const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
+      const userBend = Math.max(0, -armRotation.leftY / 50) * 0.5;
       leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         leftElbowRef.current.rotation.x,
-        (leftArmPhase > 0 ? leftArmPhase * 0.4 : 0.05) + userBend + (elbowBend * Math.PI) / 180 * 0.5,
-        0.12
+        naturalBend * leftSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+        0.1
       );
     }
     if (rightElbowRef.current) {
-      const rightArmPhase = Math.sin(time * walkSpeed) * rightSwingReduction;
-      const userBend = Math.max(0, -armRotation.rightY / 60) * 0.6;
+      const armPhase = Math.sin(walkCycle);
+      const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
+      const userBend = Math.max(0, -armRotation.rightY / 50) * 0.5;
       rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
         rightElbowRef.current.rotation.x,
-        (rightArmPhase > 0 ? rightArmPhase * 0.4 : 0.05) + userBend + (elbowBend * Math.PI) / 180 * 0.5,
-        0.12
+        naturalBend * rightSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+        0.1
       );
     }
+
     // Wrists
     if (leftWristRef.current) {
       leftWristRef.current.rotation.z = THREE.MathUtils.lerp(
