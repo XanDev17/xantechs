@@ -225,20 +225,27 @@ function RobotModel({
     []
   );
 
-  // Animate with hover effect
+  // Animate with walking motion
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     
-    // Dynamic hover animation - subtle floating
-    if (bodyRef.current) {
-      bodyRef.current.position.y = Math.sin(time * 1.2) * 0.04;
-      bodyRef.current.rotation.z = Math.sin(time * 0.8) * 0.015;
-    }
-
-    // Walking animation for legs
+    // Walking speed constant
     const walkSpeed = 2.5;
     const walkAmplitude = 0.35;
     
+    // Body sway and bob synchronized with walking
+    if (bodyRef.current) {
+      // Side-to-side sway (shifts weight with each step)
+      bodyRef.current.rotation.z = Math.sin(time * walkSpeed) * 0.025;
+      // Forward lean
+      bodyRef.current.rotation.x = 0.03;
+      // Vertical bob (double frequency - bob on each step)
+      bodyRef.current.position.y = -0.3 + Math.abs(Math.sin(time * walkSpeed * 2)) * 0.025;
+      // Slight hip rotation
+      bodyRef.current.rotation.y = Math.sin(time * walkSpeed) * 0.02;
+    }
+
+    // Walking animation for legs
     // Left leg - forward/backward swing
     if (leftLegRef.current) {
       leftLegRef.current.rotation.x = Math.sin(time * walkSpeed) * walkAmplitude;
@@ -256,12 +263,21 @@ function RobotModel({
       rightKneeRef.current.rotation.x = rightPhase < 0 ? Math.abs(rightPhase) * 0.5 : 0.05;
     }
 
-    // Head rotation with tracking
+    // Head bob and stabilization
     if (headRef.current) {
+      // Head bobs opposite to body to simulate stabilization (like humans do)
+      const headBob = -Math.abs(Math.sin(time * walkSpeed * 2)) * 0.015;
+      // Slight look-ahead tilt
       headRef.current.rotation.x = THREE.MathUtils.lerp(
         headRef.current.rotation.x,
-        (headRotation.x * Math.PI) / 180 + Math.sin(time * 0.5) * 0.02,
-        0.08
+        (headRotation.x * Math.PI) / 180 + headBob - 0.05,
+        0.1
+      );
+      // Head counter-rotates slightly against body sway
+      headRef.current.rotation.z = THREE.MathUtils.lerp(
+        headRef.current.rotation.z,
+        -Math.sin(time * walkSpeed) * 0.015,
+        0.1
       );
       headRef.current.rotation.y = THREE.MathUtils.lerp(
         headRef.current.rotation.y,
@@ -779,7 +795,7 @@ function RobotModel({
 export default function Robot3DCanvas(props: Robot3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.6, 3.8], fov: 40 }}
+      camera={{ position: [0, 0.8, 4.2], fov: 38 }}
       style={{ width: "100%", height: "100%" }}
     >
       <ambientLight intensity={0.25} />
