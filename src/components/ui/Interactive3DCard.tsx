@@ -15,6 +15,8 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
   const [armRotation, setArmRotation] = useState({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
   const [fingerCurl, setFingerCurl] = useState(0); // 0 = open, 1 = closed
   const [elbowBend, setElbowBend] = useState(0); // 0 = straight, higher = more bent
+  const [shoulderCompress, setShoulderCompress] = useState({ left: 0, right: 0 }); // shoulder shrug/compression
+  const [wristRotation, setWristRotation] = useState({ left: 0, right: 0 }); // wrist twist for waving
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !robotRef.current) return;
@@ -67,6 +69,15 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     // Elbow bends when arm is raised (negative armY means raised)
     const elbowBendAmount = Math.max(0, -armY / 60) * 90; // More raised = more bent
     setElbowBend(elbowBendAmount);
+    
+    // Shoulder compression - raises shoulder when arm goes up
+    const leftShoulderLift = Math.max(0, -armY / 60) * 8;
+    const rightShoulderLift = Math.max(0, -armY / 60) * 8;
+    setShoulderCompress({ left: leftShoulderLift, right: rightShoulderLift });
+    
+    // Wrist rotation follows horizontal cursor position for wave effect
+    const wristTwist = (deltaX / rect.width) * 30;
+    setWristRotation({ left: wristTwist, right: -wristTwist });
   };
 
   const handleMouseLeave = () => {
@@ -76,6 +87,8 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
     setArmRotation({ leftX: 0, leftY: 0, rightX: 0, rightY: 0 });
     setFingerCurl(0);
     setElbowBend(0);
+    setShoulderCompress({ left: 0, right: 0 });
+    setWristRotation({ left: 0, right: 0 });
   };
 
   return (
@@ -299,24 +312,28 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
               <div 
                 className="absolute left-[-36px] top-32 flex flex-col items-center origin-top"
                 style={{ 
-                  transform: `rotateZ(${armRotation.leftX}deg) rotateX(${armRotation.leftY}deg)`,
-                  transition: "transform 0.2s ease-out"
+                  transform: `translateY(${-shoulderCompress.left}px) rotateZ(${armRotation.leftX}deg) rotateX(${armRotation.leftY}deg)`,
+                  transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
                 }}
               >
-                {/* Shoulder joint */}
+                {/* Shoulder joint - compresses on raise */}
                 <div 
                   className="w-10 h-10 rounded-full"
                   style={{
                     background: "radial-gradient(circle at 30% 30%, #f0f0f0, #c0c0c0)",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                    transform: `scaleY(${1 - shoulderCompress.left * 0.02})`,
+                    transition: "transform 0.2s ease-out"
                   }}
                 />
-                {/* Upper arm */}
+                {/* Upper arm - slight compression when raised */}
                 <div 
-                  className="w-6 h-20 -mt-1"
+                  className="w-6 -mt-1"
                   style={{
+                    height: `${80 - shoulderCompress.left}px`,
                     background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
-                    borderRadius: "20px"
+                    borderRadius: "20px",
+                    transition: "height 0.2s ease-out"
                   }}
                 />
                 {/* Elbow joint + Forearm container - bends when arm raised */}
@@ -343,12 +360,12 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                       borderRadius: "15px"
                     }}
                   />
-                  {/* Wrist - rotates with cursor */}
+                  {/* Wrist - rotates with cursor for wave motion */}
                 <div 
                   className="w-5 h-3 bg-neutral-400 rounded-full"
                   style={{
-                    transform: `rotateX(${fingerCurl * 20}deg)`,
-                    transition: "transform 0.15s ease-out"
+                    transform: `rotateX(${fingerCurl * 20}deg) rotateZ(${wristRotation.left}deg)`,
+                    transition: "transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)"
                   }}
                 />
                 {/* Hand - palm with articulated fingers */}
@@ -491,24 +508,28 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
               <div 
                 className="absolute right-[-36px] top-32 flex flex-col items-center origin-top"
                 style={{ 
-                  transform: `rotateZ(${armRotation.rightX}deg) rotateX(${armRotation.rightY}deg)`,
-                  transition: "transform 0.2s ease-out"
+                  transform: `translateY(${-shoulderCompress.right}px) rotateZ(${armRotation.rightX}deg) rotateX(${armRotation.rightY}deg)`,
+                  transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
                 }}
               >
-                {/* Shoulder joint */}
+                {/* Shoulder joint - compresses on raise */}
                 <div 
                   className="w-10 h-10 rounded-full"
                   style={{
                     background: "radial-gradient(circle at 70% 30%, #f0f0f0, #c0c0c0)",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                    transform: `scaleY(${1 - shoulderCompress.right * 0.02})`,
+                    transition: "transform 0.2s ease-out"
                   }}
                 />
-                {/* Upper arm */}
+                {/* Upper arm - slight compression when raised */}
                 <div 
-                  className="w-6 h-20 -mt-1"
+                  className="w-6 -mt-1"
                   style={{
+                    height: `${80 - shoulderCompress.right}px`,
                     background: "linear-gradient(90deg, #d0d0d0 0%, #f0f0f0 50%, #d0d0d0 100%)",
-                    borderRadius: "20px"
+                    borderRadius: "20px",
+                    transition: "height 0.2s ease-out"
                   }}
                 />
                 {/* Elbow joint + Forearm container - bends when arm raised */}
@@ -535,12 +556,12 @@ const Interactive3DCard = ({ children, className = "" }: SpotlightCardProps) => 
                       borderRadius: "15px"
                     }}
                   />
-                  {/* Wrist - rotates with cursor */}
+                  {/* Wrist - rotates with cursor for wave motion */}
                 <div 
                   className="w-5 h-3 bg-neutral-400 rounded-full"
                   style={{
-                    transform: `rotateX(${fingerCurl * 20}deg)`,
-                    transition: "transform 0.15s ease-out"
+                    transform: `rotateX(${fingerCurl * 20}deg) rotateZ(${wristRotation.right}deg)`,
+                    transition: "transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)"
                   }}
                 />
                 {/* Hand - palm with articulated fingers */}
