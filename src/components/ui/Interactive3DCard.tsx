@@ -30,10 +30,10 @@ const Interactive3DCard = ({ children, className = "" }: Interactive3DCardProps)
         </div>
 
         {/* Right content - Spline Scene */}
-        <div className="flex-1 relative h-[200px] sm:h-[240px] md:h-full order-1 md:order-2">
+        <div className="flex-1 relative h-[220px] sm:h-[260px] md:h-full order-1 md:order-2 overflow-visible">
           <SplineScene 
             scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-            className="w-full h-full scale-[0.7] sm:scale-[0.8] md:scale-100 origin-center"
+            className="w-full h-full scale-[0.55] sm:scale-[0.65] md:scale-100 origin-center"
           />
         </div>
       </div>
