@@ -729,5 +729,16 @@ function RobotModel({
     </group>;
 }
 export default function Robot3DCanvas(props: Robot3DProps) {
-  return;
+  return (
+    <Canvas
+      camera={{ position: [0, 0.5, 3.5], fov: 45 }}
+      style={{ height: "400px", width: "100%" }}
+      gl={{ antialias: true, alpha: true }}
+    >
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[5, 5, 5]} intensity={0.6} />
+      <Environment preset="city" />
+      <RobotModel {...props} />
+    </Canvas>
+  );
 }

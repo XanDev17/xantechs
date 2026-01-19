@@ -140,6 +140,42 @@ const Interactive3DCard = ({
       right: 0
     });
   };
-  return;
+  return (
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Spotlight effect */}
+      <div
+        className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
+        style={{
+          background: isHovered
+            ? `radial-gradient(circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(59, 130, 246, 0.15) 0%, transparent 50%)`
+            : "transparent",
+          opacity: isHovered ? 1 : 0,
+        }}
+      />
+      
+      {/* Robot container */}
+      <div ref={robotRef} className="relative z-0">
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center"><span className="loader"></span></div>}>
+          <Robot3DCanvas
+            eyeOffset={eyeOffset}
+            headRotation={headRotation}
+            armRotation={armRotation}
+            fingerCurl={fingerCurl}
+            elbowBend={elbowBend}
+            shoulderCompress={shoulderCompress}
+            wristRotation={wristRotation}
+          />
+        </Suspense>
+      </div>
+      
+      {children}
+    </div>
+  );
 };
 export default Interactive3DCard;
