@@ -14,7 +14,7 @@ const Interactive3DCard = ({ children, className = "" }: Interactive3DCardProps)
     <Card className={`w-full h-[500px] bg-black/[0.96] relative overflow-hidden ${className}`}>
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20"
-        size={400}
+        fill="white"
       />
       
       <div className="flex h-full">
