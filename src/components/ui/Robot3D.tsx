@@ -2,67 +2,59 @@ import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
+
 interface Robot3DProps {
-  eyeOffset: {
-    x: number;
-    y: number;
-  };
-  headRotation: {
-    x: number;
-    y: number;
-  };
-  armRotation: {
-    leftX: number;
-    leftY: number;
-    rightX: number;
-    rightY: number;
-  };
+  eyeOffset: { x: number; y: number };
+  headRotation: { x: number; y: number };
+  armRotation: { leftX: number; leftY: number; rightX: number; rightY: number };
   fingerCurl: number;
   elbowBend: number;
-  shoulderCompress: {
-    left: number;
-    right: number;
-  };
-  wristRotation: {
-    left: number;
-    right: number;
-  };
+  shoulderCompress: { left: number; right: number };
+  wristRotation: { left: number; right: number };
 }
 
 // Glowing thruster component
-function Thruster({
-  position,
-  scale = 1
-}: {
-  position: [number, number, number];
-  scale?: number;
-}) {
+function Thruster({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   const thrusterRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
-  const thrusterMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#00ffff",
-    emissive: "#00ffff",
-    emissiveIntensity: 2,
-    transparent: true,
-    opacity: 0.9
-  }), []);
-  const glowMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#00ffff",
-    emissive: "#00ffff",
-    emissiveIntensity: 1.5,
-    transparent: true,
-    opacity: 0.3
-  }), []);
-  useFrame(state => {
+  
+  const thrusterMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#00ffff",
+        emissive: "#00ffff",
+        emissiveIntensity: 2,
+        transparent: true,
+        opacity: 0.9,
+      }),
+    []
+  );
+
+  const glowMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#00ffff",
+        emissive: "#00ffff",
+        emissiveIntensity: 1.5,
+        transparent: true,
+        opacity: 0.3,
+      }),
+    []
+  );
+
+  useFrame((state) => {
     if (thrusterRef.current) {
       thrusterRef.current.scale.y = 1 + Math.sin(state.clock.elapsedTime * 8) * 0.2;
-      (thrusterRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 2 + Math.sin(state.clock.elapsedTime * 12) * 0.5;
+      (thrusterRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 
+        2 + Math.sin(state.clock.elapsedTime * 12) * 0.5;
     }
     if (glowRef.current) {
       glowRef.current.scale.setScalar(scale * (1 + Math.sin(state.clock.elapsedTime * 6) * 0.15));
     }
   });
-  return <group position={position}>
+
+  return (
+    <group position={position}>
       {/* Core thruster */}
       <mesh ref={thrusterRef} material={thrusterMaterial}>
         <coneGeometry args={[0.03 * scale, 0.12 * scale, 16]} />
@@ -76,26 +68,26 @@ function Thruster({
         <torusGeometry args={[0.025 * scale, 0.008 * scale, 8, 16]} />
         <meshStandardMaterial color="#0088aa" metalness={0.9} roughness={0.2} />
       </mesh>
-    </group>;
+    </group>
+  );
 }
 
 // Exposed cable component
-function Cable({
-  start,
-  end,
-  color = "#333333"
-}: {
-  start: [number, number, number];
-  end: [number, number, number];
-  color?: string;
-}) {
-  const cableMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color,
-    metalness: 0.3,
-    roughness: 0.7
-  }), [color]);
+function Cable({ start, end, color = "#333333" }: { start: [number, number, number]; end: [number, number, number]; color?: string }) {
+  const cableMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color,
+        metalness: 0.3,
+        roughness: 0.7,
+      }),
+    [color]
+  );
+
   const midY = (start[1] + end[1]) / 2 - 0.02;
-  return <group>
+  
+  return (
+    <group>
       <mesh position={[start[0], start[1], start[2]]} material={cableMaterial}>
         <sphereGeometry args={[0.012, 8, 8]} />
       </mesh>
@@ -105,25 +97,24 @@ function Cable({
       <mesh position={[end[0], end[1], end[2]]} material={cableMaterial}>
         <sphereGeometry args={[0.012, 8, 8]} />
       </mesh>
-    </group>;
+    </group>
+  );
 }
 
 // Armor plate component
-function ArmorPlate({
-  position,
-  rotation = [0, 0, 0],
-  size,
-  material
-}: {
-  position: [number, number, number];
+function ArmorPlate({ position, rotation = [0, 0, 0], size, material }: { 
+  position: [number, number, number]; 
   rotation?: [number, number, number];
   size: [number, number, number];
   material: THREE.Material;
 }) {
-  return <mesh position={position} rotation={rotation} material={material}>
+  return (
+    <mesh position={position} rotation={rotation} material={material}>
       <boxGeometry args={size} />
-    </mesh>;
+    </mesh>
+  );
 }
+
 function RobotModel({
   eyeOffset,
   headRotation,
@@ -131,7 +122,7 @@ function RobotModel({
   fingerCurl,
   elbowBend,
   shoulderCompress,
-  wristRotation
+  wristRotation,
 }: Robot3DProps) {
   const headRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
@@ -149,79 +140,118 @@ function RobotModel({
   const rightKneeRef = useRef<THREE.Group>(null);
 
   // Biomechanical materials
-  const armorMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#1a1a1a",
-    metalness: 0.85,
-    roughness: 0.2
-  }), []);
-  const ceramicMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#2a2a2a",
-    metalness: 0.4,
-    roughness: 0.3
-  }), []);
-  const frameMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#0d0d0d",
-    metalness: 0.95,
-    roughness: 0.1
-  }), []);
-  const hydraulicMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#444444",
-    metalness: 0.7,
-    roughness: 0.4
-  }), []);
-  const jointMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#222222",
-    metalness: 0.6,
-    roughness: 0.5
-  }), []);
-  const visorMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#001a1a",
-    metalness: 0.95,
-    roughness: 0.05,
-    envMapIntensity: 4
-  }), []);
-  const eyeMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#00ffff",
-    emissive: "#00ffff",
-    emissiveIntensity: 1.5,
-    metalness: 0.2,
-    roughness: 0.1
-  }), []);
-  const accentMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#00aaaa",
-    emissive: "#00ffff",
-    emissiveIntensity: 0.3,
-    metalness: 0.8,
-    roughness: 0.2
-  }), []);
+  const armorMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#1a1a1a",
+        metalness: 0.85,
+        roughness: 0.2,
+      }),
+    []
+  );
+
+  const ceramicMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#2a2a2a",
+        metalness: 0.4,
+        roughness: 0.3,
+      }),
+    []
+  );
+
+  const frameMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#0d0d0d",
+        metalness: 0.95,
+        roughness: 0.1,
+      }),
+    []
+  );
+
+  const hydraulicMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#444444",
+        metalness: 0.7,
+        roughness: 0.4,
+      }),
+    []
+  );
+
+  const jointMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#222222",
+        metalness: 0.6,
+        roughness: 0.5,
+      }),
+    []
+  );
+
+  const visorMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#001a1a",
+        metalness: 0.95,
+        roughness: 0.05,
+        envMapIntensity: 4,
+      }),
+    []
+  );
+
+  const eyeMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#00ffff",
+        emissive: "#00ffff",
+        emissiveIntensity: 1.5,
+        metalness: 0.2,
+        roughness: 0.1,
+      }),
+    []
+  );
+
+  const accentMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#00aaaa",
+        emissive: "#00ffff",
+        emissiveIntensity: 0.3,
+        metalness: 0.8,
+        roughness: 0.2,
+      }),
+    []
+  );
 
   // Human-like walking animation
-  useFrame(state => {
+  useFrame((state) => {
     const time = state.clock.elapsedTime;
-
+    
     // Walking parameters - slower, more natural pace
     const walkSpeed = 1.8; // Slower for more realistic human gait
     const strideLength = 0.28; // How far legs swing
-
+    
     // Walking cycle phase (0 to 2π)
     const walkCycle = time * walkSpeed;
-
+    
     // === BODY MOTION ===
     if (bodyRef.current) {
       // Vertical bob - humans bob twice per stride (once per foot strike)
       // Lowest point when foot strikes, highest at mid-stance
       const verticalBob = Math.abs(Math.sin(walkCycle * 2)) * 0.018;
       bodyRef.current.position.y = -0.3 + verticalBob;
-
+      
       // Lateral sway - weight shifts side to side with each step
       const lateralSway = Math.sin(walkCycle) * 0.018;
       bodyRef.current.position.x = lateralSway * 0.3;
       bodyRef.current.rotation.z = lateralSway * 0.8;
-
+      
       // Pelvic rotation - hips rotate opposite to shoulders
       const pelvicRotation = Math.sin(walkCycle) * 0.04;
       bodyRef.current.rotation.y = pelvicRotation;
-
+      
       // Slight forward lean while walking
       bodyRef.current.rotation.x = 0.02;
     }
@@ -240,7 +270,7 @@ function RobotModel({
       rightLegRef.current.rotation.x = rightSwing;
       rightLegRef.current.rotation.z = Math.sin(walkCycle + Math.PI) > 0 ? 0.02 : 0;
     }
-
+    
     // Knee bend - bends during swing phase, extends during stance
     // Humans bend knee more when leg swings back, less when forward
     if (leftKneeRef.current) {
@@ -261,54 +291,112 @@ function RobotModel({
       // This is a key human trait - vestibulo-ocular reflex
       const headCounterRotation = -Math.sin(walkCycle) * 0.02;
       const headVerticalStabilization = -Math.abs(Math.sin(walkCycle * 2)) * 0.01;
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, headRotation.x * Math.PI / 180 + headVerticalStabilization - 0.03, 0.12);
-      headRef.current.rotation.z = THREE.MathUtils.lerp(headRef.current.rotation.z, headCounterRotation, 0.12);
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, headRotation.y * Math.PI / 180 - Math.sin(walkCycle) * 0.015, 0.1);
+      
+      headRef.current.rotation.x = THREE.MathUtils.lerp(
+        headRef.current.rotation.x,
+        (headRotation.x * Math.PI) / 180 + headVerticalStabilization - 0.03,
+        0.12
+      );
+      headRef.current.rotation.z = THREE.MathUtils.lerp(
+        headRef.current.rotation.z,
+        headCounterRotation,
+        0.12
+      );
+      headRef.current.rotation.y = THREE.MathUtils.lerp(
+        headRef.current.rotation.y,
+        (headRotation.y * Math.PI) / 180 - Math.sin(walkCycle) * 0.015,
+        0.1
+      );
     }
 
     // Eye tracking
     if (leftEyeRef.current) {
-      leftEyeRef.current.position.x = THREE.MathUtils.lerp(leftEyeRef.current.position.x, -0.1 + eyeOffset.x * 0.015, 0.12);
-      leftEyeRef.current.position.y = THREE.MathUtils.lerp(leftEyeRef.current.position.y, 0.03 + eyeOffset.y * 0.015, 0.12);
+      leftEyeRef.current.position.x = THREE.MathUtils.lerp(
+        leftEyeRef.current.position.x,
+        -0.1 + eyeOffset.x * 0.015,
+        0.12
+      );
+      leftEyeRef.current.position.y = THREE.MathUtils.lerp(
+        leftEyeRef.current.position.y,
+        0.03 + eyeOffset.y * 0.015,
+        0.12
+      );
     }
     if (rightEyeRef.current) {
-      rightEyeRef.current.position.x = THREE.MathUtils.lerp(rightEyeRef.current.position.x, 0.1 + eyeOffset.x * 0.015, 0.12);
-      rightEyeRef.current.position.y = THREE.MathUtils.lerp(rightEyeRef.current.position.y, 0.03 + eyeOffset.y * 0.015, 0.12);
+      rightEyeRef.current.position.x = THREE.MathUtils.lerp(
+        rightEyeRef.current.position.x,
+        0.1 + eyeOffset.x * 0.015,
+        0.12
+      );
+      rightEyeRef.current.position.y = THREE.MathUtils.lerp(
+        rightEyeRef.current.position.y,
+        0.03 + eyeOffset.y * 0.015,
+        0.12
+      );
     }
 
     // === ARM MOTION ===
     // Human arm swing: arms swing opposite to legs (contralateral pattern)
     // Right arm forward when left leg forward, with natural elbow bend
     const armSwingAmplitude = 0.22;
-
+    
     // Calculate user input influence
     const leftArmUserInput = Math.abs(armRotation.leftY) + Math.abs(armRotation.leftX);
     const rightArmUserInput = Math.abs(armRotation.rightY) + Math.abs(armRotation.rightX);
     const leftSwingReduction = Math.max(0, 1 - leftArmUserInput / 25);
     const rightSwingReduction = Math.max(0, 1 - rightArmUserInput / 25);
+    
     if (leftArmRef.current) {
       // Left arm swings forward when right leg is forward (walkCycle + PI)
       const armSwing = Math.sin(walkCycle + Math.PI) * armSwingAmplitude * leftSwingReduction;
-
+      
       // Natural arm swing with slight outward arc at front of swing
-      leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, armSwing + armRotation.leftY * Math.PI / 180, 0.1);
-
+      leftArmRef.current.rotation.x = THREE.MathUtils.lerp(
+        leftArmRef.current.rotation.x,
+        armSwing + (armRotation.leftY * Math.PI) / 180,
+        0.1
+      );
+      
       // Arm naturally swings slightly outward when moving forward
       const swingOutward = Math.sin(walkCycle + Math.PI) > 0 ? 0.03 : 0;
       const userRaise = Math.max(0, -armRotation.leftY) * 0.012;
-      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(leftArmRef.current.rotation.z, 0.12 + swingOutward * leftSwingReduction + armRotation.leftX * Math.PI / 180 + userRaise, 0.1);
-
+      leftArmRef.current.rotation.z = THREE.MathUtils.lerp(
+        leftArmRef.current.rotation.z,
+        0.12 + swingOutward * leftSwingReduction + (armRotation.leftX * Math.PI) / 180 + userRaise,
+        0.1
+      );
+      
       // Shoulder rises slightly when arm swings back
-      leftArmRef.current.position.y = THREE.MathUtils.lerp(leftArmRef.current.position.y, 1.65 + shoulderCompress.left * 0.01 + (armSwing < 0 ? 0.01 : 0), 0.1);
+      leftArmRef.current.position.y = THREE.MathUtils.lerp(
+        leftArmRef.current.position.y,
+        1.65 + shoulderCompress.left * 0.01 + (armSwing < 0 ? 0.01 : 0),
+        0.1
+      );
     }
+
     if (rightArmRef.current) {
       // Right arm swings forward when left leg is forward (walkCycle)
       const armSwing = Math.sin(walkCycle) * armSwingAmplitude * rightSwingReduction;
-      rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, armSwing + armRotation.rightY * Math.PI / 180, 0.1);
+      
+      rightArmRef.current.rotation.x = THREE.MathUtils.lerp(
+        rightArmRef.current.rotation.x,
+        armSwing + (armRotation.rightY * Math.PI) / 180,
+        0.1
+      );
+      
       const swingOutward = Math.sin(walkCycle) > 0 ? -0.03 : 0;
       const userRaise = Math.max(0, -armRotation.rightY) * 0.012;
-      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.12 + swingOutward * rightSwingReduction + armRotation.rightX * Math.PI / 180 - userRaise, 0.1);
-      rightArmRef.current.position.y = THREE.MathUtils.lerp(rightArmRef.current.position.y, 1.65 + shoulderCompress.right * 0.01 + (armSwing < 0 ? 0.01 : 0), 0.1);
+      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(
+        rightArmRef.current.rotation.z,
+        -0.12 + swingOutward * rightSwingReduction + (armRotation.rightX * Math.PI) / 180 - userRaise,
+        0.1
+      );
+      
+      rightArmRef.current.position.y = THREE.MathUtils.lerp(
+        rightArmRef.current.position.y,
+        1.65 + shoulderCompress.right * 0.01 + (armSwing < 0 ? 0.01 : 0),
+        0.1
+      );
     }
 
     // === ELBOW MOTION ===
@@ -318,26 +406,52 @@ function RobotModel({
       // Elbow bends when arm is behind body, extends when in front
       const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
       const userBend = Math.max(0, -armRotation.leftY / 50) * 0.5;
-      leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(leftElbowRef.current.rotation.x, naturalBend * leftSwingReduction + userBend + elbowBend * Math.PI / 180 * 0.4, 0.1);
+      leftElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+        leftElbowRef.current.rotation.x,
+        naturalBend * leftSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+        0.1
+      );
     }
     if (rightElbowRef.current) {
       const armPhase = Math.sin(walkCycle);
       const naturalBend = armPhase < 0 ? Math.abs(armPhase) * 0.35 : 0.08;
       const userBend = Math.max(0, -armRotation.rightY / 50) * 0.5;
-      rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(rightElbowRef.current.rotation.x, naturalBend * rightSwingReduction + userBend + elbowBend * Math.PI / 180 * 0.4, 0.1);
+      rightElbowRef.current.rotation.x = THREE.MathUtils.lerp(
+        rightElbowRef.current.rotation.x,
+        naturalBend * rightSwingReduction + userBend + (elbowBend * Math.PI) / 180 * 0.4,
+        0.1
+      );
     }
 
     // Wrists
     if (leftWristRef.current) {
-      leftWristRef.current.rotation.z = THREE.MathUtils.lerp(leftWristRef.current.rotation.z, wristRotation.left * Math.PI / 180, 0.08);
-      leftWristRef.current.rotation.x = THREE.MathUtils.lerp(leftWristRef.current.rotation.x, fingerCurl * 20 * Math.PI / 180, 0.08);
+      leftWristRef.current.rotation.z = THREE.MathUtils.lerp(
+        leftWristRef.current.rotation.z,
+        (wristRotation.left * Math.PI) / 180,
+        0.08
+      );
+      leftWristRef.current.rotation.x = THREE.MathUtils.lerp(
+        leftWristRef.current.rotation.x,
+        (fingerCurl * 20 * Math.PI) / 180,
+        0.08
+      );
     }
     if (rightWristRef.current) {
-      rightWristRef.current.rotation.z = THREE.MathUtils.lerp(rightWristRef.current.rotation.z, wristRotation.right * Math.PI / 180, 0.08);
-      rightWristRef.current.rotation.x = THREE.MathUtils.lerp(rightWristRef.current.rotation.x, fingerCurl * 20 * Math.PI / 180, 0.08);
+      rightWristRef.current.rotation.z = THREE.MathUtils.lerp(
+        rightWristRef.current.rotation.z,
+        (wristRotation.right * Math.PI) / 180,
+        0.08
+      );
+      rightWristRef.current.rotation.x = THREE.MathUtils.lerp(
+        rightWristRef.current.rotation.x,
+        (fingerCurl * 20 * Math.PI) / 180,
+        0.08
+      );
     }
   });
-  return <group ref={bodyRef} position={[0, -0.3, 0]} scale={0.52}>
+
+  return (
+    <group ref={bodyRef} position={[0, -0.3, 0]} scale={0.52}>
       {/* ========== HEAD ========== */}
       <group ref={headRef} position={[0, 2.2, 0]}>
         {/* Main skull - segmented armor */}
@@ -379,9 +493,11 @@ function RobotModel({
           <capsuleGeometry args={[0.015, 0.12, 8, 16]} />
         </mesh>
         {/* Back head vents */}
-        {[-0.08, 0, 0.08].map((x, i) => <mesh key={i} position={[x, 0, -0.26]} material={hydraulicMaterial}>
+        {[-0.08, 0, 0.08].map((x, i) => (
+          <mesh key={i} position={[x, 0, -0.26]} material={hydraulicMaterial}>
             <boxGeometry args={[0.04, 0.15, 0.02]} />
-          </mesh>)}
+          </mesh>
+        ))}
       </group>
 
       {/* ========== NECK ========== */}
@@ -391,9 +507,11 @@ function RobotModel({
           <cylinderGeometry args={[0.08, 0.1, 0.15, 16]} />
         </mesh>
         {/* Neck rings */}
-        {[0.05, 0.02, -0.02, -0.05].map((y, i) => <mesh key={i} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]} material={frameMaterial}>
+        {[0.05, 0.02, -0.02, -0.05].map((y, i) => (
+          <mesh key={i} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]} material={frameMaterial}>
             <torusGeometry args={[0.085 + i * 0.003, 0.008, 8, 24]} />
-          </mesh>)}
+          </mesh>
+        ))}
         {/* Exposed cables */}
         <Cable start={[-0.06, 0.05, 0.05]} end={[-0.08, -0.05, 0.06]} color="#444444" />
         <Cable start={[0.06, 0.05, 0.05]} end={[0.08, -0.05, 0.06]} color="#444444" />
@@ -436,11 +554,15 @@ function RobotModel({
         <Cable start={[-0.12, 0.02, 0.13]} end={[-0.1, -0.15, 0.12]} color="#333333" />
         <Cable start={[0.12, 0.02, 0.13]} end={[0.1, -0.15, 0.12]} color="#333333" />
         {/* Side vents */}
-        {[-1, 1].map((side, i) => <group key={i} position={[side * 0.28, 0.05, 0]}>
-            {[0.08, 0.02, -0.04].map((y, j) => <mesh key={j} position={[0, y, 0]} material={hydraulicMaterial}>
+        {[-1, 1].map((side, i) => (
+          <group key={i} position={[side * 0.28, 0.05, 0]}>
+            {[0.08, 0.02, -0.04].map((y, j) => (
+              <mesh key={j} position={[0, y, 0]} material={hydraulicMaterial}>
                 <boxGeometry args={[0.03, 0.04, 0.2]} />
-              </mesh>)}
-          </group>)}
+              </mesh>
+            ))}
+          </group>
+        ))}
       </group>
 
       {/* ========== WAIST ========== */}
@@ -507,14 +629,16 @@ function RobotModel({
               <boxGeometry args={[0.09, 0.08, 0.045]} />
             </mesh>
             {/* Fingers - articulated segments */}
-            {[-0.028, -0.01, 0.01, 0.028].map((x, i) => <group key={i} position={[x, -0.12, 0]}>
+            {[-0.028, -0.01, 0.01, 0.028].map((x, i) => (
+              <group key={i} position={[x, -0.12, 0]}>
                 <mesh material={jointMaterial}>
                   <capsuleGeometry args={[0.012, 0.025, 8, 16]} />
                 </mesh>
                 <mesh position={[0, -0.035, 0]} material={frameMaterial}>
                   <capsuleGeometry args={[0.01, 0.02, 8, 16]} />
                 </mesh>
-              </group>)}
+              </group>
+            ))}
             {/* Thumb */}
             <group position={[-0.055, -0.06, 0.01]} rotation={[0, 0, 0.6]}>
               <mesh material={jointMaterial}>
@@ -570,14 +694,16 @@ function RobotModel({
               <boxGeometry args={[0.09, 0.08, 0.045]} />
             </mesh>
             {/* Fingers */}
-            {[-0.028, -0.01, 0.01, 0.028].map((x, i) => <group key={i} position={[x, -0.12, 0]}>
+            {[-0.028, -0.01, 0.01, 0.028].map((x, i) => (
+              <group key={i} position={[x, -0.12, 0]}>
                 <mesh material={jointMaterial}>
                   <capsuleGeometry args={[0.012, 0.025, 8, 16]} />
                 </mesh>
                 <mesh position={[0, -0.035, 0]} material={frameMaterial}>
                   <capsuleGeometry args={[0.01, 0.02, 8, 16]} />
                 </mesh>
-              </group>)}
+              </group>
+            ))}
             {/* Thumb */}
             <group position={[0.055, -0.06, 0.01]} rotation={[0, 0, -0.6]}>
               <mesh material={jointMaterial}>
@@ -726,18 +852,21 @@ function RobotModel({
       <pointLight position={[1.5, 1, -1]} color="#ffffff" intensity={0.5} distance={5} />
       <pointLight position={[0, -1, 2]} color="#00ffff" intensity={0.3} distance={3} />
       <pointLight position={[0, 0.5, 1]} color="#00ffff" intensity={0.2} distance={2} />
-    </group>;
+    </group>
+  );
 }
+
 export default function Robot3DCanvas(props: Robot3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.5, 3.5], fov: 45 }}
-      style={{ height: "400px", width: "100%" }}
-      gl={{ antialias: true, alpha: true }}
+      camera={{ position: [0, 0.8, 4.2], fov: 38 }}
+      style={{ width: "100%", height: "100%" }}
     >
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 5, 5]} intensity={0.6} />
-      <Environment preset="city" />
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[3, 4, 5]} intensity={1.8} />
+      <directionalLight position={[-2, 2, -3]} intensity={0.5} />
+      <spotLight position={[0, 5, 4]} intensity={1.5} angle={0.5} penumbra={0.6} />
+      <Environment preset="studio" />
       <RobotModel {...props} />
     </Canvas>
   );
