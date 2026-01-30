@@ -7,6 +7,7 @@ import WhyUs from "@/components/sections/WhyUs";
 import Portfolio from "@/components/sections/Portfolio";
 import Contact from "@/components/sections/Contact";
 import Storyboard from "@/components/sections/Storyboard";
+import ChatBot from "@/components/chat/ChatBot";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
         <Contact />
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 };
