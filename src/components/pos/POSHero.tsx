@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
 import { ArrowRight, Star, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import splashScreen from "@/assets/pos/splash_screen.png";
 
 const POSHero = () => {
   return (
@@ -22,8 +22,8 @@ const POSHero = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-gradient">POSXander</span>{" "}
-              <span className="text-foreground">– Smart POS for Modern Retail</span>
+              <span className="text-gradient">POS System</span>{" "}
+              <span className="text-foreground">– Retail & Billing</span>
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
@@ -72,29 +72,12 @@ const POSHero = () => {
             {/* Phone Mockup */}
             <div className="relative z-10 mx-auto max-w-[320px]">
               <div className="rounded-[3rem] bg-foreground p-3 shadow-2xl">
-                <div className="rounded-[2.5rem] bg-card overflow-hidden aspect-[9/19] border-4 border-foreground/10">
-                  <div className="h-full w-full bg-gradient-to-br from-primary/20 to-primary/5 flex flex-col">
-                    {/* Status bar */}
-                    <div className="h-8 bg-foreground/5 flex items-center justify-center">
-                      <div className="w-20 h-1 bg-foreground/20 rounded-full" />
-                    </div>
-                    {/* Content */}
-                    <div className="flex-1 p-6 flex flex-col items-center justify-center">
-                      <div className="w-24 h-24 mb-6 rounded-3xl gradient-primary flex items-center justify-center shadow-lg">
-                        <span className="text-4xl font-bold text-primary-foreground">PX</span>
-                      </div>
-                      <h3 className="text-xl font-bold text-foreground mb-2">POSXander</h3>
-                      <p className="text-sm text-muted-foreground text-center mb-6">Smart Retail POS</p>
-                      
-                      <div className="w-full space-y-3">
-                        <div className="h-10 bg-primary/10 rounded-lg" />
-                        <div className="h-10 bg-primary/10 rounded-lg" />
-                        <div className="h-10 gradient-primary rounded-lg flex items-center justify-center">
-                          <span className="text-sm font-medium text-primary-foreground">Start Selling</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="rounded-[2.5rem] overflow-hidden aspect-[9/19] border-4 border-foreground/10">
+                  <img 
+                    src={splashScreen} 
+                    alt="POS System: Retail & Billing - Splash Screen" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
