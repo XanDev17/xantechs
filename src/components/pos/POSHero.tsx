@@ -27,13 +27,13 @@ const POSHero = () => {
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              Sell faster, manage inventory, and grow with confidence. The all-in-one Android 
-              POS solution trusted by thousands of retailers worldwide.
+              A complete offline point-of-sale solution that replaces traditional cash registers. 
+              Manage sales, inventory, and reporting — no internet required. Trusted by retailers worldwide.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="https://play.google.com/store"
+                href="https://play.google.com/store/apps/details?id=com.xantechs.pos_store"
                 target="_blank"
                 rel="noopener noreferrer"
               >

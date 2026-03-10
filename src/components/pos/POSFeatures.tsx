@@ -3,11 +3,12 @@ import {
   Package, 
   BarChart3, 
   Users, 
-  Wifi, 
+  WifiOff, 
   CreditCard,
-  QrCode,
+  Mic,
   Receipt,
-  Settings
+  Fingerprint,
+  CloudUpload
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -16,47 +17,52 @@ const POSFeatures = () => {
     {
       icon: ShoppingCart,
       title: "Quick Sales",
-      description: "Process transactions in seconds with an intuitive interface designed for speed."
+      description: "Product catalog with search, categories, shopping cart, and fast payment processing for cash, card & contactless."
     },
     {
       icon: Package,
-      title: "Inventory Tracking",
-      description: "Real-time stock management with low-stock alerts and automatic updates."
+      title: "Inventory Management",
+      description: "Full product database with categories, stock level monitoring, low stock alerts, and add/edit/delete products."
     },
     {
       icon: BarChart3,
-      title: "Sales Reports",
-      description: "Comprehensive analytics with daily, weekly, and monthly sales insights."
+      title: "Reports & Analytics",
+      description: "Sales reports by date range, profit/loss analysis, top products, interactive charts, and PDF export."
     },
     {
       icon: Users,
-      title: "Staff Management",
-      description: "Manage employee access, track performance, and set permissions."
+      title: "Multi-Role Access",
+      description: "Admin & Cashier accounts with separate permissions. Manage users and track performance per role."
     },
     {
-      icon: Wifi,
-      title: "Offline Mode",
-      description: "Keep selling even without internet. Data syncs when you're back online."
+      icon: WifiOff,
+      title: "100% Offline",
+      description: "Works completely without internet using local databases (SQLite + Hive). Sync data when you're back online."
     },
     {
       icon: CreditCard,
       title: "Multi-Payment",
-      description: "Accept cash, cards, mobile payments, and split transactions effortlessly."
+      description: "Accept cash, card, and contactless payments. Process split transactions and void/cancel with ease."
     },
     {
-      icon: QrCode,
-      title: "Barcode Scanning",
-      description: "Built-in camera scanner for quick product lookup and checkout."
+      icon: Mic,
+      title: "Voice Commands",
+      description: "Speech-to-text voice activation for hands-free operation during busy checkout periods."
     },
     {
       icon: Receipt,
-      title: "Digital Receipts",
-      description: "Send receipts via email or SMS. Print to Bluetooth printers."
+      title: "Professional Receipts",
+      description: "Generate and print professional receipts. Full transaction history with customer lookup."
     },
     {
-      icon: Settings,
-      title: "Customizable",
-      description: "Tailor the app to your business with custom categories and settings."
+      icon: Fingerprint,
+      title: "Biometric Security",
+      description: "Fingerprint and face recognition login with remember-me functionality and role persistence."
+    },
+    {
+      icon: CloudUpload,
+      title: "Google Drive Backup",
+      description: "Automatic cloud backup to Google Drive when online. Multi-device sync capabilities."
     }
   ];
 
