@@ -93,11 +93,11 @@ const POSScreenshots = () => {
               {/* Main Screenshot */}
               <div className="w-64 md:w-72 shrink-0">
                 <div className="rounded-3xl bg-foreground p-2 shadow-2xl">
-                  <div className="rounded-2xl overflow-hidden aspect-[9/16] border-2 border-foreground/10">
+                  <div className="rounded-2xl overflow-hidden aspect-[9/20] border-2 border-foreground/10">
                     <img
                       src={screenshots[currentIndex].image}
                       alt={screenshots[currentIndex].title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain bg-muted"
                     />
                   </div>
                 </div>
