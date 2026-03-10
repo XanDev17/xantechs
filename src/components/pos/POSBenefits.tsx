@@ -30,12 +30,12 @@ const POSBenefits = () => {
   ];
 
   const highlights = [
-    "No expensive hardware required",
-    "Free updates and improvements",
-    "Cloud backup included",
-    "Multi-store support",
-    "24/7 customer support",
-    "Easy data migration"
+    "100% Offline operation",
+    "Professional receipts & PDF reports",
+    "Multi-role security (Admin/Cashier)",
+    "Real-time inventory tracking",
+    "Voice-activated commands",
+    "Google Drive backup & sync"
   ];
 
   return (

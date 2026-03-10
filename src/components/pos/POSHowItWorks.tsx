@@ -68,7 +68,7 @@ const POSHowItWorks = () => {
 
         <div className="text-center">
           <a
-            href="https://play.google.com/store"
+            href="https://play.google.com/store/apps/details?id=com.xantechs.pos_store"
             target="_blank"
             rel="noopener noreferrer"
           >

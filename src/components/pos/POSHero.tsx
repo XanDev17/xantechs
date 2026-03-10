@@ -33,7 +33,7 @@ const POSHero = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="https://play.google.com/store"
+                href="https://play.google.com/store/apps/details?id=com.xantechs.pos_store"
                 target="_blank"
                 rel="noopener noreferrer"
               >

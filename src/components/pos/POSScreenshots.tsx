@@ -7,24 +7,28 @@ const POSScreenshots = () => {
 
   const screenshots = [
     {
-      title: "Dashboard",
-      description: "Get a quick overview of your daily sales and performance metrics."
+      title: "Login & Auth",
+      description: "Multi-role login with biometric security — fingerprint & face recognition."
     },
     {
       title: "Sales Screen",
-      description: "Fast, intuitive checkout interface designed for speed."
+      description: "Product catalog with search, cart, and cash/card/contactless payments."
     },
     {
       title: "Inventory",
-      description: "Manage your products with powerful inventory tools."
+      description: "Full product database with stock monitoring and low-stock alerts."
+    },
+    {
+      title: "Transactions",
+      description: "Complete sales history with filtering, receipts, and void capabilities."
     },
     {
       title: "Reports",
-      description: "Detailed analytics to understand your business better."
+      description: "Sales reports, profit/loss analysis, interactive charts, and PDF export."
     },
     {
       title: "Settings",
-      description: "Customize POSXander to match your workflow."
+      description: "Business config, tax setup, user management, and app preferences."
     }
   ];
 
