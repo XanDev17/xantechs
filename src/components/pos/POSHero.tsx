@@ -72,11 +72,11 @@ const POSHero = () => {
             {/* Phone Mockup */}
             <div className="relative z-10 mx-auto max-w-[320px]">
               <div className="rounded-[3rem] bg-foreground p-3 shadow-2xl">
-                <div className="rounded-[2.5rem] overflow-hidden aspect-[9/19] border-4 border-foreground/10">
+              <div className="rounded-[2.5rem] overflow-hidden aspect-[9/20] border-4 border-foreground/10">
                   <img 
                     src={splashScreen} 
                     alt="POS System: Retail & Billing - Splash Screen" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-[#1a3a7a]"
                   />
                 </div>
               </div>

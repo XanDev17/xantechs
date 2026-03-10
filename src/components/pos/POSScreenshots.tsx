@@ -113,11 +113,11 @@ const POSScreenshots = () => {
 
               {/* Right Preview */}
               <div className="hidden lg:block w-48 shrink-0 opacity-40 transform scale-90">
-                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/16]">
+                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/20]">
                   <img
                     src={screenshots[(currentIndex + 1) % screenshots.length].image}
                     alt={screenshots[(currentIndex + 1) % screenshots.length].title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-muted"
                   />
                 </div>
               </div>
