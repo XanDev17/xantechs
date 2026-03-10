@@ -81,11 +81,11 @@ const POSScreenshots = () => {
             <div className="flex items-center gap-4 overflow-hidden">
               {/* Left Preview */}
               <div className="hidden lg:block w-48 shrink-0 opacity-40 transform scale-90">
-                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/16]">
+                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/20]">
                   <img
                     src={screenshots[(currentIndex - 1 + screenshots.length) % screenshots.length].image}
                     alt={screenshots[(currentIndex - 1 + screenshots.length) % screenshots.length].title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-muted"
                   />
                 </div>
               </div>
@@ -93,11 +93,11 @@ const POSScreenshots = () => {
               {/* Main Screenshot */}
               <div className="w-64 md:w-72 shrink-0">
                 <div className="rounded-3xl bg-foreground p-2 shadow-2xl">
-                  <div className="rounded-2xl overflow-hidden aspect-[9/16] border-2 border-foreground/10">
+                  <div className="rounded-2xl overflow-hidden aspect-[9/20] border-2 border-foreground/10">
                     <img
                       src={screenshots[currentIndex].image}
                       alt={screenshots[currentIndex].title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain bg-muted"
                     />
                   </div>
                 </div>
@@ -113,11 +113,11 @@ const POSScreenshots = () => {
 
               {/* Right Preview */}
               <div className="hidden lg:block w-48 shrink-0 opacity-40 transform scale-90">
-                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/16]">
+                <div className="rounded-2xl bg-card border border-border overflow-hidden aspect-[9/20]">
                   <img
                     src={screenshots[(currentIndex + 1) % screenshots.length].image}
                     alt={screenshots[(currentIndex + 1) % screenshots.length].title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-muted"
                   />
                 </div>
               </div>
