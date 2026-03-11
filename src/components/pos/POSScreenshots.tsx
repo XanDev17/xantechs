@@ -7,7 +7,7 @@ import salesScreen from "@/assets/pos/sales_screen.png";
 import inventoryScreen from "@/assets/pos/inventory_screen.png";
 import transactionScreen from "@/assets/pos/transaction_screen.png";
 import reportsScreen from "@/assets/pos/reports_screen.png";
-import aiScreen from "@/assets/pos/ai_screen.png";
+
 
 const POSScreenshots = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
