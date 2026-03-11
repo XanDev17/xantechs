@@ -38,11 +38,6 @@ const POSScreenshots = () => {
       description: "Sales reports, profit/loss analysis, interactive charts, and PDF export.",
       image: reportsScreen
     },
-    {
-      title: "XanTechs AI",
-      description: "Built-in AI assistant for business insights, recommendations, and analytics.",
-      image: aiScreen
-    }
   ];
 
   const nextSlide = () => {
