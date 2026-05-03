@@ -2,6 +2,7 @@ import { Smartphone, ScanLine, ArrowUpRight, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Portfolio = () => {
   const projects = [
@@ -13,15 +14,17 @@ const Portfolio = () => {
       tags: ["Offline-First", "SQLite", "Biometric Auth", "Voice Commands", "Drive Backup"],
       icon: Smartphone,
       url: "https://play.google.com/store/apps/details?id=com.xantechs.pos_store",
+      page: "/pos",
     },
     {
       title: "QR & OCR Scanner",
       category: "Android App",
       description:
-        "Fast, accurate QR code and OCR text scanner. Instantly scan QR codes and extract text from images or documents — perfect for productivity, business, and everyday use.",
-      tags: ["QR Scanner", "OCR", "Text Extraction", "Image to Text", "Offline"],
+        "All-in-one QR scanner, OCR text extractor and PDF toolkit. Scan codes, generate branded QRs, extract text from images and convert PDFs — privacy-first and fully offline.",
+      tags: ["QR Scanner", "OCR", "PDF Tools", "Offline", "Privacy-First"],
       icon: ScanLine,
       url: "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr",
+      page: "/qr-ocr",
     },
   ];
 
@@ -87,12 +90,19 @@ const Portfolio = () => {
                       </span>
                     ))}
                   </div>
-                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="block pt-2">
-                    <Button className="w-full gradient-primary">
-                      <Download className="w-4 h-4 mr-2" />
-                      Get on Google Play
-                    </Button>
-                  </a>
+                  <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="flex-1">
+                      <Button className="w-full gradient-primary">
+                        <Download className="w-4 h-4 mr-2" />
+                        Google Play
+                      </Button>
+                    </a>
+                    <Link to={project.page} className="flex-1">
+                      <Button variant="outline" className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white">
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>
