@@ -1,51 +1,28 @@
-import { ExternalLink, Globe, Smartphone, Layout, ArrowUpRight } from "lucide-react";
+import { Smartphone, ScanLine, ArrowUpRight, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const Portfolio = () => {
   const projects = [
     {
-      title: "E-Commerce Platform",
-      category: "Web Application",
-      description: "Full-stack e-commerce solution with inventory management, payment processing, and admin dashboard.",
-      tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
-      icon: Globe,
-    },
-    {
-      title: "SaaS Dashboard",
-      category: "Web Application",
-      description: "Analytics dashboard for a marketing automation platform with real-time data visualization.",
-      tags: ["React", "TypeScript", "Chart.js", "REST API"],
-      icon: Layout,
-    },
-    {
-      title: "POSXander",
-      category: "Mobile App",
-      description: "Android POS application for retail businesses with offline support and cloud sync.",
-      tags: ["Android", "Kotlin", "Firebase", "SQLite"],
+      title: "POS System: Retail & Billing",
+      category: "Android App",
+      description:
+        "A complete offline point-of-sale solution that replaces traditional cash registers. Manage sales, inventory, and reporting — no internet required. Supports grocery, restaurant, retail, and service businesses.",
+      tags: ["Offline-First", "SQLite", "Biometric Auth", "Voice Commands", "Drive Backup"],
       icon: Smartphone,
+      url: "https://play.google.com/store/apps/details?id=com.xantechs.pos_store",
     },
     {
-      title: "Corporate Website",
-      category: "Website",
-      description: "Modern corporate website with CMS integration, blog, and lead generation forms.",
-      tags: ["React", "Tailwind", "Headless CMS", "SEO"],
-      icon: Globe,
+      title: "QR & OCR Scanner",
+      category: "Android App",
+      description:
+        "Fast, accurate QR code and OCR text scanner. Instantly scan QR codes and extract text from images or documents — perfect for productivity, business, and everyday use.",
+      tags: ["QR Scanner", "OCR", "Text Extraction", "Image to Text", "Offline"],
+      icon: ScanLine,
+      url: "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr",
     },
-    {
-      title: "Booking Platform",
-      category: "Web Application",
-      description: "Appointment scheduling system for healthcare providers with patient portal.",
-      tags: ["Next.js", "Prisma", "Twilio", "Stripe"],
-      icon: Layout,
-    },
-    {
-      title: "Startup Landing Page",
-      category: "Landing Page",
-      description: "High-converting landing page for a fintech startup with waitlist and investor section.",
-      tags: ["React", "Framer Motion", "Analytics", "A/B Testing"],
-      icon: Layout,
-    }
   ];
 
   return (
@@ -68,16 +45,16 @@ const Portfolio = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Portfolio</p>
+          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Apps</p>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-            Featured Projects
+            Apps We've Built
           </h2>
           <p className="text-white/60 text-lg">
-            A showcase of our recent work across web applications, websites, and custom software solutions.
+            Two production Android apps live on Google Play — built, shipped, and trusted by users worldwide.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {projects.map((project, index) => (
             <Card
               key={index}
@@ -85,16 +62,7 @@ const Portfolio = () => {
             >
               <CardContent className="p-0">
                 <div className="aspect-video bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center relative overflow-hidden">
-                  <project.icon className="w-16 h-16 text-white/20 group-hover:text-primary/40 transition-colors duration-500" />
-                  {/* Animated circuit lines */}
-                  <div className="absolute inset-0">
-                    <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path d="M0,50 L40,50 L50,40 L100,40" stroke="currentColor" strokeWidth="0.3" fill="none" className="text-primary" />
-                      <path d="M0,70 L30,70 L40,60 L100,60" stroke="currentColor" strokeWidth="0.3" fill="none" className="text-primary" />
-                      <circle cx="40" cy="50" r="1" fill="currentColor" className="text-primary" />
-                      <circle cx="50" cy="40" r="1" fill="currentColor" className="text-primary" />
-                    </svg>
-                  </div>
+                  <project.icon className="w-20 h-20 text-white/30 group-hover:text-primary/60 transition-colors duration-500" />
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
@@ -119,6 +87,12 @@ const Portfolio = () => {
                       </span>
                     ))}
                   </div>
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="block pt-2">
+                    <Button className="w-full gradient-primary">
+                      <Download className="w-4 h-4 mr-2" />
+                      Get on Google Play
+                    </Button>
+                  </a>
                 </div>
               </CardContent>
             </Card>
