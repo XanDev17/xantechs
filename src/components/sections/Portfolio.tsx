@@ -45,16 +45,16 @@ const Portfolio = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Portfolio</p>
+          <p className="text-primary font-semibold tracking-wide uppercase text-sm">Our Apps</p>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-            Featured Projects
+            Apps We've Built
           </h2>
           <p className="text-white/60 text-lg">
-            A showcase of our recent work across web applications, websites, and custom software solutions.
+            Two production Android apps live on Google Play — built, shipped, and trusted by users worldwide.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {projects.map((project, index) => (
             <Card
               key={index}
@@ -62,16 +62,7 @@ const Portfolio = () => {
             >
               <CardContent className="p-0">
                 <div className="aspect-video bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center relative overflow-hidden">
-                  <project.icon className="w-16 h-16 text-white/20 group-hover:text-primary/40 transition-colors duration-500" />
-                  {/* Animated circuit lines */}
-                  <div className="absolute inset-0">
-                    <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path d="M0,50 L40,50 L50,40 L100,40" stroke="currentColor" strokeWidth="0.3" fill="none" className="text-primary" />
-                      <path d="M0,70 L30,70 L40,60 L100,60" stroke="currentColor" strokeWidth="0.3" fill="none" className="text-primary" />
-                      <circle cx="40" cy="50" r="1" fill="currentColor" className="text-primary" />
-                      <circle cx="50" cy="40" r="1" fill="currentColor" className="text-primary" />
-                    </svg>
-                  </div>
+                  <project.icon className="w-20 h-20 text-white/30 group-hover:text-primary/60 transition-colors duration-500" />
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
@@ -96,6 +87,12 @@ const Portfolio = () => {
                       </span>
                     ))}
                   </div>
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="block pt-2">
+                    <Button className="w-full gradient-primary">
+                      <Download className="w-4 h-4 mr-2" />
+                      Get on Google Play
+                    </Button>
+                  </a>
                 </div>
               </CardContent>
             </Card>
