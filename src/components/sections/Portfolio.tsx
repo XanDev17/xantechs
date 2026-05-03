@@ -1,51 +1,28 @@
-import { ExternalLink, Globe, Smartphone, Layout, ArrowUpRight } from "lucide-react";
+import { Smartphone, ScanLine, ArrowUpRight, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const Portfolio = () => {
   const projects = [
     {
-      title: "E-Commerce Platform",
-      category: "Web Application",
-      description: "Full-stack e-commerce solution with inventory management, payment processing, and admin dashboard.",
-      tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
-      icon: Globe,
-    },
-    {
-      title: "SaaS Dashboard",
-      category: "Web Application",
-      description: "Analytics dashboard for a marketing automation platform with real-time data visualization.",
-      tags: ["React", "TypeScript", "Chart.js", "REST API"],
-      icon: Layout,
-    },
-    {
-      title: "POSXander",
-      category: "Mobile App",
-      description: "Android POS application for retail businesses with offline support and cloud sync.",
-      tags: ["Android", "Kotlin", "Firebase", "SQLite"],
+      title: "POS System: Retail & Billing",
+      category: "Android App",
+      description:
+        "A complete offline point-of-sale solution that replaces traditional cash registers. Manage sales, inventory, and reporting — no internet required. Supports grocery, restaurant, retail, and service businesses.",
+      tags: ["Offline-First", "SQLite", "Biometric Auth", "Voice Commands", "Drive Backup"],
       icon: Smartphone,
+      url: "https://play.google.com/store/apps/details?id=com.xantechs.pos_store",
     },
     {
-      title: "Corporate Website",
-      category: "Website",
-      description: "Modern corporate website with CMS integration, blog, and lead generation forms.",
-      tags: ["React", "Tailwind", "Headless CMS", "SEO"],
-      icon: Globe,
+      title: "QR & OCR Scanner",
+      category: "Android App",
+      description:
+        "Fast, accurate QR code and OCR text scanner. Instantly scan QR codes and extract text from images or documents — perfect for productivity, business, and everyday use.",
+      tags: ["QR Scanner", "OCR", "Text Extraction", "Image to Text", "Offline"],
+      icon: ScanLine,
+      url: "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr",
     },
-    {
-      title: "Booking Platform",
-      category: "Web Application",
-      description: "Appointment scheduling system for healthcare providers with patient portal.",
-      tags: ["Next.js", "Prisma", "Twilio", "Stripe"],
-      icon: Layout,
-    },
-    {
-      title: "Startup Landing Page",
-      category: "Landing Page",
-      description: "High-converting landing page for a fintech startup with waitlist and investor section.",
-      tags: ["React", "Framer Motion", "Analytics", "A/B Testing"],
-      icon: Layout,
-    }
   ];
 
   return (
