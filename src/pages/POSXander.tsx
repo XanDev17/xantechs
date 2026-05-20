@@ -163,6 +163,24 @@ const POSXander = () => {
           </div>
         </section>
 
+        {/* Play Store screenshots */}
+        <section className="py-20 bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+              <p className="text-primary font-semibold tracking-wide uppercase text-sm">App Preview</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Straight from Google Play</h2>
+              <p className="text-muted-foreground text-lg">Real screenshots of the live app — what you see is what you get.</p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+              {SCREENSHOTS.map((src, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden border border-border bg-card shadow-card hover:shadow-glow transition-shadow">
+                  <img src={src} alt={`POS Offline screenshot ${i + 1}`} loading="lazy" className="w-full h-auto block" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Storyboard */}
         <section id="how-it-works" className="py-24 bg-background">
           <div className="container mx-auto px-4">
