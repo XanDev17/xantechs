@@ -25,6 +25,13 @@ import {
 } from "lucide-react";
 
 const PLAY_URL = "https://play.google.com/store/apps/details?id=com.xantechs.pos_store";
+const APP_ICON = "https://play-lh.googleusercontent.com/gCuGoi79GiTTiEXUSsjfD008lsD0dEZ5a6S40JqxUxorLz09dmv1vvBoOy2tAIO_f4Mdn5nCbtaUL1QL7D4n3Q=w240-h480-rw";
+const SCREENSHOTS = [
+  "https://play-lh.googleusercontent.com/WCjDx_-fwx33I8nOQSv7_81Wuh0wL0jh9KXVNKay0gGtAD08DVyM-cLuy1lnrQGDMzF_hxkdjxBJQUN37QVo=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/-e-p0yGI5r2odP7yXssEpOmuvhCJzqwJuv3EAztKDE1h7QuY2MR6kzsknQxI-WnRU69HS8kyGGeIrxHiN6QL=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/F__ePwl6Lc6d4xTahHTJ71XZ-U5ibWC1G2d-dbIVwGN1SloGd03XMlzGqlW-ve8vibaYH1Gz0fbo0by6N46l=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/2ftYyV0aq0jes1V9YuoumO6z3LIEB5brZN75dcEAhgm9OAZoydX2w6sWxhLj2o2n7JqHzwZT6sfcKikklnmeIQ=w526-h296-rw",
+];
 
 const storyboard = [
   {
@@ -126,13 +133,17 @@ const POSXander = () => {
                 Live on Google Play
               </div>
 
+              <div className="flex justify-center">
+                <img src={APP_ICON} alt="POS Offline app icon" width={88} height={88} className="w-22 h-22 rounded-3xl shadow-glow" />
+              </div>
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-gradient">XanTechs POS</span>
-                <span className="text-foreground"> — Stock & Billing</span>
+                <span className="text-gradient">POS Offline</span>
+                <span className="text-foreground"> — Barcode &amp; Stock</span>
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                The all-in-one point-of-sale and inventory manager built for speed, accuracy, and growth.
+                The all-in-one offline point-of-sale and inventory manager built for speed, accuracy, and growth.
                 From barcode scanning to AI-driven insights — XanTechs POS keeps your shop running, online or off.
               </p>
 
@@ -148,6 +159,24 @@ const POSXander = () => {
                   <Button size="lg" variant="outline" className="w-full sm:w-auto">See How It Works</Button>
                 </a>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Play Store screenshots */}
+        <section className="py-20 bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+              <p className="text-primary font-semibold tracking-wide uppercase text-sm">App Preview</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Straight from Google Play</h2>
+              <p className="text-muted-foreground text-lg">Real screenshots of the live app — what you see is what you get.</p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+              {SCREENSHOTS.map((src, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden border border-border bg-card shadow-card hover:shadow-glow transition-shadow">
+                  <img src={src} alt={`POS Offline screenshot ${i + 1}`} loading="lazy" className="w-full h-auto block" />
+                </div>
+              ))}
             </div>
           </div>
         </section>

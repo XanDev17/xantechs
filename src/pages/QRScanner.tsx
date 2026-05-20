@@ -7,12 +7,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-import appIcon from "@/assets/qrocr/app_icon.png";
-import scanScreen from "@/assets/qrocr/scan_screen.png";
-import generateScreen from "@/assets/qrocr/generate_screen.png";
-import ocrScreen from "@/assets/qrocr/ocr_screen.png";
-import pdfScreen from "@/assets/qrocr/pdf_screen.png";
-import historyScreen from "@/assets/qrocr/history_screen.png";
+const APP_ICON = "https://play-lh.googleusercontent.com/49kSqNiYR6taU5m0N38EzOOGATXjyDyqCRrs5sRpa3z3P6MyTTrrImi96TtWCBUh2O7-HsdYi5tVyoeDytBgOw=w240-h480-rw";
+const PLAY_SHOTS = [
+  "https://play-lh.googleusercontent.com/czi3c-Kb_wre4u9CNTHoNJb09LBIQbdsSf_KP7M7bOthnhsWLAxTgQ8oqTm8JD91vYFOpERxCpBGBmhrn67bpaA=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/jrC4Z5cspoKFPlcaqM5T1Hx0rcbD5S4-10yZFTD7ounjpQtj_bWleyJIgTHIxyS-csimHO_z1YjUNz8Pa2B21Q=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/QIHXy_bwI7_qjH2EnoOuOdW6exHv4syz11-qoba-v_0vYzoqpiaCuqQZybD6FxFych2WiBLqtS8yWr2I-S8D=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/FQNEstxXf2RiDNV8hZgPVg2zob0OWwbEMpicoK8rIEjbFX8ZBSbGylt1KfSn55Y2p6RsGfxZrJkb6MMe4wSoXg=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/9vlBWNA5sp12BQcwTX-RQbN4eP2TFptXQ53pgzNE7HK4MP6hTGAO8zkhzbmc8B89vGhOwcKAzgPX5ssG2bDy5Q=w526-h296-rw",
+];
 
 const PLAY_URL = "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr";
 
@@ -29,11 +31,11 @@ const features = [
 ];
 
 const screenshots = [
-  { title: "Scan Anything", description: "Fast, reliable QR & barcode scanning in any lighting.", image: scanScreen },
-  { title: "Generate Branded QRs", description: "Custom colors, eye shapes and logo embedding.", image: generateScreen },
-  { title: "OCR Image to Text", description: "Extract editable text from any document or photo.", image: ocrScreen },
-  { title: "Powerful PDF Tools", description: "Convert, compress, merge and split PDFs.", image: pdfScreen },
-  { title: "Scan History", description: "Search and re-share every scan you've made.", image: historyScreen },
+  { title: "Scan Anything", description: "Fast, reliable QR & barcode scanning in any lighting.", image: PLAY_SHOTS[0] },
+  { title: "Generate Branded QRs", description: "Custom colors, eye shapes and logo embedding.", image: PLAY_SHOTS[1] },
+  { title: "OCR Image to Text", description: "Extract editable text from any document or photo.", image: PLAY_SHOTS[2] },
+  { title: "Powerful PDF Tools", description: "Convert, compress, merge and split PDFs.", image: PLAY_SHOTS[3] },
+  { title: "All-in-One Toolkit", description: "Every utility in one privacy-first app.", image: PLAY_SHOTS[4] },
 ];
 
 const QRScanner = () => {
@@ -56,7 +58,7 @@ const QRScanner = () => {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8 animate-fade-in">
                 <div className="flex items-center gap-4">
-                  <img src={appIcon} alt="XanScan app icon" width={64} height={64} className="w-16 h-16 rounded-2xl shadow-lg" />
+                  <img src={APP_ICON} alt="XanScan app icon" width={64} height={64} className="w-16 h-16 rounded-2xl shadow-lg" />
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
                     <Star className="w-4 h-4 fill-primary text-primary" />
                     On Google Play
@@ -108,7 +110,7 @@ const QRScanner = () => {
                 <div className="relative z-10 mx-auto max-w-[320px]">
                   <div className="rounded-[3rem] bg-foreground p-3 shadow-2xl">
                     <div className="rounded-[2.5rem] overflow-hidden aspect-[9/20] border-4 border-foreground/10">
-                      <img src={scanScreen} alt="XanScan scanner screen" className="w-full h-full object-contain bg-[#1a3a7a]" />
+                      <img src={PLAY_SHOTS[0]} alt="XanScan scanner screen" className="w-full h-full object-cover bg-[#1a3a7a]" />
                     </div>
                   </div>
                 </div>
