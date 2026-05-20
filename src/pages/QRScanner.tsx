@@ -31,11 +31,11 @@ const features = [
 ];
 
 const screenshots = [
-  { title: "Scan Anything", description: "Fast, reliable QR & barcode scanning in any lighting.", image: scanScreen },
-  { title: "Generate Branded QRs", description: "Custom colors, eye shapes and logo embedding.", image: generateScreen },
-  { title: "OCR Image to Text", description: "Extract editable text from any document or photo.", image: ocrScreen },
-  { title: "Powerful PDF Tools", description: "Convert, compress, merge and split PDFs.", image: pdfScreen },
-  { title: "Scan History", description: "Search and re-share every scan you've made.", image: historyScreen },
+  { title: "Scan Anything", description: "Fast, reliable QR & barcode scanning in any lighting.", image: PLAY_SHOTS[0] },
+  { title: "Generate Branded QRs", description: "Custom colors, eye shapes and logo embedding.", image: PLAY_SHOTS[1] },
+  { title: "OCR Image to Text", description: "Extract editable text from any document or photo.", image: PLAY_SHOTS[2] },
+  { title: "Powerful PDF Tools", description: "Convert, compress, merge and split PDFs.", image: PLAY_SHOTS[3] },
+  { title: "All-in-One Toolkit", description: "Every utility in one privacy-first app.", image: PLAY_SHOTS[4] },
 ];
 
 const QRScanner = () => {
