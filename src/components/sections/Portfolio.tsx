@@ -1,4 +1,4 @@
-import { Smartphone, ScanLine, ArrowUpRight, Download } from "lucide-react";
+import { Smartphone, ScanLine, Link2, ArrowUpRight, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,16 @@ const Portfolio = () => {
       icon: ScanLine,
       url: "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr",
       page: "/qr-ocr",
+    },
+    {
+      title: "LinkVault: Save Links & URLs",
+      category: "Android App",
+      description:
+        "A powerful offline URL saver, bookmark manager and link organizer. Save, scan and bulk-import hundreds of links — paste a Google Doc and LinkVault extracts every URL inside, with no cloud and no tracking.",
+      tags: ["URL Saver", "Bulk Import", "Bookmarks", "Offline", "Privacy-First"],
+      icon: Link2,
+      url: "https://play.google.com/store/apps/details?id=com.xantechs.linkvault.app",
+      page: "/linkvault",
     },
   ];
 
@@ -57,7 +67,7 @@ const Portfolio = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {projects.map((project, index) => (
             <Card
               key={index}
