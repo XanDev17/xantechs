@@ -58,7 +58,7 @@ const QRScanner = () => {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8 animate-fade-in">
                 <div className="flex items-center gap-4">
-                  <img src={appIcon} alt="XanScan app icon" width={64} height={64} className="w-16 h-16 rounded-2xl shadow-lg" />
+                  <img src={APP_ICON} alt="XanScan app icon" width={64} height={64} className="w-16 h-16 rounded-2xl shadow-lg" />
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
                     <Star className="w-4 h-4 fill-primary text-primary" />
                     On Google Play
@@ -110,7 +110,7 @@ const QRScanner = () => {
                 <div className="relative z-10 mx-auto max-w-[320px]">
                   <div className="rounded-[3rem] bg-foreground p-3 shadow-2xl">
                     <div className="rounded-[2.5rem] overflow-hidden aspect-[9/20] border-4 border-foreground/10">
-                      <img src={scanScreen} alt="XanScan scanner screen" className="w-full h-full object-contain bg-[#1a3a7a]" />
+                      <img src={PLAY_SHOTS[0]} alt="XanScan scanner screen" className="w-full h-full object-cover bg-[#1a3a7a]" />
                     </div>
                   </div>
                 </div>
