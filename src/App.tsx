@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import POSXander from "./pages/POSXander";
 import QRScanner from "./pages/QRScanner";
+import LinkVault from "./pages/LinkVault";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/pos" element={<POSXander />} />
           <Route path="/qr-ocr" element={<QRScanner />} />
+          <Route path="/linkvault" element={<LinkVault />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

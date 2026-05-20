@@ -6,83 +6,84 @@ import {
   ArrowRight,
   Download,
   Star,
+  Link2,
   ScanLine,
-  Palette,
-  FileText,
-  FileImage,
+  Upload,
+  FolderTree,
+  Bell,
+  BarChart3,
   Shield,
-  Zap,
-  Wifi,
-  History,
-  Layers,
-  QrCode,
+  FileJson,
+  Search,
+  Tag,
+  Image as ImageIcon,
   GraduationCap,
   Briefcase,
-  Camera,
-  Share2,
+  ShoppingBag,
+  BookOpen,
 } from "lucide-react";
 
-const PLAY_URL = "https://play.google.com/store/apps/details?id=com.xantechs.qr_ocr";
-const APP_ICON = "https://play-lh.googleusercontent.com/49kSqNiYR6taU5m0N38EzOOGATXjyDyqCRrs5sRpa3z3P6MyTTrrImi96TtWCBUh2O7-HsdYi5tVyoeDytBgOw=w240-h480-rw";
+const PLAY_URL = "https://play.google.com/store/apps/details?id=com.xantechs.linkvault.app";
+const APP_ICON = "https://play-lh.googleusercontent.com/pt5wO4eThwkm6I1UMtys-WjmiCabT8bs-vdBVcq4ECutXrLWuUpVcI7tLtn3pSe25piepQ5iDbnaaqWFCMy51Aw=w240-h480-rw";
 const SCREENSHOTS = [
-  "https://play-lh.googleusercontent.com/czi3c-Kb_wre4u9CNTHoNJb09LBIQbdsSf_KP7M7bOthnhsWLAxTgQ8oqTm8JD91vYFOpERxCpBGBmhrn67bpaA=w526-h296-rw",
-  "https://play-lh.googleusercontent.com/jrC4Z5cspoKFPlcaqM5T1Hx0rcbD5S4-10yZFTD7ounjpQtj_bWleyJIgTHIxyS-csimHO_z1YjUNz8Pa2B21Q=w526-h296-rw",
-  "https://play-lh.googleusercontent.com/QIHXy_bwI7_qjH2EnoOuOdW6exHv4syz11-qoba-v_0vYzoqpiaCuqQZybD6FxFych2WiBLqtS8yWr2I-S8D=w526-h296-rw",
-  "https://play-lh.googleusercontent.com/FQNEstxXf2RiDNV8hZgPVg2zob0OWwbEMpicoK8rIEjbFX8ZBSbGylt1KfSn55Y2p6RsGfxZrJkb6MMe4wSoXg=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/eDaY5zyREg-o_U2F4fAWodGhf2egEE1jSKTpaJ7nodzLp--dgkc_ysdX8rKT8jAJkoqdWTVawJ8e1heL5dAfFA=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/AYhi2_uhbH21BcILBVXK95RGdWcqNaPOBC2jAA7vN1GuxtJJP5M-uUEyi2NMx6Pvc6UJaFxNC_BuqAUjRaUM8WE=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/FjNU-TZFp9C3dgoSNWGUlbaPw7a8vAURF33vCfMkrEy4EU3mJuD5LX3AL2QMMJl9AcLqFzMTWJQ0bi3W3xhx-g=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/U5U7NEVcFnZOEv5ewJHev_ca0Rk4FbJuar1nVAAJvAYK_RZg3nHaqs9AWUl1GLcf72Ih2mD2KVbnv3GooxH8=w526-h296-rw",
 ];
 
 const storyboard = [
-  { step: "01", icon: ScanLine, title: "Point and scan instantly", text: "Open XanScan, aim at any QR code or barcode, and get the result in a split second — even in low light, fully offline." },
-  { step: "02", icon: Palette, title: "Design your own branded QR", text: "Create QR codes for URLs, WiFi, vCards, WhatsApp, SMS or Email. Customize colors, eye shapes and drop in your logo." },
-  { step: "03", icon: FileText, title: "Turn images into editable text", text: "Use AI OCR to extract text from photos, documents, signs or YouTube thumbnails. Copy, share or save it instantly." },
-  { step: "04", icon: FileImage, title: "Build pro PDFs in seconds", text: "Convert images to PDF, compress big files, split, merge or reorder pages — all the document tools in one place." },
-  { step: "05", icon: History, title: "Find any scan again later", text: "Every scan, generated QR and OCR result is saved locally with smart search and one-tap re-share." },
-  { step: "06", icon: Shield, title: "Keep your data on your phone", text: "Everything runs on-device. No tracking, no cloud upload — your scans and documents never leave you." },
+  { step: "01", icon: Link2, title: "Save any link instantly", text: "Paste, share or type — LinkVault grabs the title, preview and description automatically and turns it into a visual card." },
+  { step: "02", icon: ScanLine, title: "Scan or extract URLs anywhere", text: "Use the built-in QR scanner or OCR to pull links out of images, screenshots, business cards and printed documents." },
+  { step: "03", icon: Upload, title: "Bulk import hundreds at once", text: "Drop a Google Sheets or Docs link and LinkVault extracts every URL inside — turning one paste into hundreds of saved links." },
+  { step: "04", icon: FolderTree, title: "Organize into folders & tags", text: "Sort links into custom folders, add categories, attach private notes, and search across your entire vault in seconds." },
+  { step: "05", icon: Bell, title: "Set reminders for later", text: "Schedule alerts to revisit important articles, research or shopping links so nothing important gets forgotten." },
+  { step: "06", icon: Shield, title: "Stay 100% offline & private", text: "No cloud sync. No tracking. All data lives on your device — backup or move it anytime with JSON import & export." },
 ];
 
 const featureGroups = [
   {
-    heading: "QR & Barcode Scanner",
+    heading: "Smart Link Saving",
     items: [
-      { icon: ScanLine, title: "Instant Detection", text: "Auto-detect QR codes and barcodes from camera or gallery." },
-      { icon: Camera, title: "Low-Light Ready", text: "Optimized scanning engine works in any environment." },
-      { icon: Wifi, title: "WiFi & vCard", text: "Share WiFi access or contact cards customers can scan instantly." },
+      { icon: Link2, title: "Instant Capture", text: "Save links with full metadata — title, preview and description." },
+      { icon: ImageIcon, title: "Visual Link Cards", text: "Browse your vault like a gallery, not a boring list." },
+      { icon: Search, title: "Fast Search", text: "Find any saved URL in seconds across folders and notes." },
     ],
   },
   {
-    heading: "Branded QR Generator",
+    heading: "Capture & Extract",
     items: [
-      { icon: Palette, title: "Custom Design", text: "Choose colors, eye shapes and embed your logo." },
-      { icon: QrCode, title: "Multi-Format", text: "URLs, WhatsApp, SMS, Email, vCard, WiFi and more." },
-      { icon: Share2, title: "One-Tap Share", text: "Export as PNG or share straight to any app." },
+      { icon: ScanLine, title: "QR Code Scanner", text: "Scan QR codes to instantly save the link inside." },
+      { icon: FileJson, title: "OCR Link Extraction", text: "Pull URLs out of photos, screenshots and printed text." },
+      { icon: Upload, title: "Bulk URL Importer", text: "Paste many links or a Google Doc and import them all at once." },
     ],
   },
   {
-    heading: "AI-Powered OCR",
+    heading: "Powerful Organizer",
     items: [
-      { icon: FileText, title: "Image to Text", text: "Extract editable text from any document or photo." },
-      { icon: Layers, title: "Batch Processing", text: "Convert multiple images at once with a clean workflow." },
-      { icon: Zap, title: "Fast & Accurate", text: "On-device AI delivers high-accuracy results in seconds." },
+      { icon: FolderTree, title: "Custom Folders", text: "Group bookmarks into folders that match how you think." },
+      { icon: Tag, title: "Tags & Notes", text: "Add private notes and categories to every saved URL." },
+      { icon: Bell, title: "Smart Reminders", text: "Get notified to revisit important saved content." },
     ],
   },
   {
-    heading: "Pro PDF Toolkit",
+    heading: "Private & In Control",
     items: [
-      { icon: FileImage, title: "Image to PDF", text: "Turn photos into polished, ready-to-share PDFs." },
-      { icon: Layers, title: "Merge & Split", text: "Combine, split, reorder and compress PDF files." },
-      { icon: Shield, title: "Privacy First", text: "All conversions happen locally — nothing is uploaded." },
+      { icon: Shield, title: "100% Offline", text: "No cloud, no tracking — your links never leave the device." },
+      { icon: FileJson, title: "JSON Import / Export", text: "Back up, restore and transfer your vault between phones." },
+      { icon: BarChart3, title: "Link Analytics", text: "Track total saved links, categories and growth over time." },
     ],
   },
 ];
 
 const audiences = [
-  { icon: Briefcase, title: "Professionals", text: "Share vCards, scan invoices, manage PDFs on the go." },
-  { icon: GraduationCap, title: "Students", text: "Extract text from notes, books and slides instantly." },
-  { icon: QrCode, title: "Small Businesses", text: "Branded QR menus, WiFi codes and product labels." },
-  { icon: Camera, title: "Everyday Users", text: "Scan anything, save it, and share without ads in the way." },
+  { icon: GraduationCap, title: "Students", text: "Save research links and import bibliographies in bulk." },
+  { icon: Briefcase, title: "Professionals", text: "Organize resources, references and client materials." },
+  { icon: ShoppingBag, title: "Shoppers", text: "Track products, deals and wishlists across stores." },
+  { icon: BookOpen, title: "Readers", text: "Bookmark articles and set reminders to read later." },
 ];
 
-const QRScanner = () => {
+const LinkVault = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -102,17 +103,17 @@ const QRScanner = () => {
               </div>
 
               <div className="flex justify-center">
-                <img src={APP_ICON} alt="XanScan app icon" width={88} height={88} className="w-22 h-22 rounded-3xl shadow-glow" />
+                <img src={APP_ICON} alt="LinkVault app icon" width={88} height={88} className="w-22 h-22 rounded-3xl shadow-glow" />
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-gradient">XanScan</span>
-                <span className="text-foreground"> — QR, OCR &amp; PDF</span>
+                <span className="text-gradient">LinkVault</span>
+                <span className="text-foreground"> — Save Links &amp; URLs Privately</span>
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                The all-in-one QR scanner, barcode reader, OCR text extractor and PDF toolkit.
-                Fast, offline-first, and 100% private — every scan stays on your phone.
+                A powerful offline URL saver, bookmark manager and link organizer.
+                Save, scan, bulk-import and organize every link in one secure place — no cloud, no tracking.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -142,7 +143,7 @@ const QRScanner = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
               {SCREENSHOTS.map((src, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden border border-border bg-card shadow-card hover:shadow-glow transition-shadow">
-                  <img src={src} alt={`XanScan screenshot ${i + 1}`} loading="lazy" className="w-full h-auto block" />
+                  <img src={src} alt={`LinkVault screenshot ${i + 1}`} loading="lazy" className="w-full h-auto block" />
                 </div>
               ))}
             </div>
@@ -154,9 +155,9 @@ const QRScanner = () => {
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
               <p className="text-primary font-semibold tracking-wide uppercase text-sm">How It Works</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">From Scan to Share in 6 Simple Steps</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">From Scattered Links to a Private Vault</h2>
               <p className="text-muted-foreground text-lg">
-                A quick story of how XanScan replaces four apps with one — without sending a single byte to the cloud.
+                A quick story of how LinkVault turns one paste into hundreds of organized, searchable URLs.
               </p>
             </div>
 
@@ -203,8 +204,8 @@ const QRScanner = () => {
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
               <p className="text-primary font-semibold tracking-wide uppercase text-sm">What's Inside</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Four Powerful Tools in One App</h2>
-              <p className="text-muted-foreground text-lg">Scan, generate, extract and convert — privacy-first.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">A Complete URL Saver &amp; Organizer</h2>
+              <p className="text-muted-foreground text-lg">Capture, organize, back up and protect every link you care about.</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -240,7 +241,7 @@ const QRScanner = () => {
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
               <p className="text-primary font-semibold tracking-wide uppercase text-sm">Who It's For</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Built for Everyone Who Scans</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Built for Every Kind of Link Collector</h2>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
@@ -266,10 +267,10 @@ const QRScanner = () => {
         <section className="py-24 bg-secondary/40">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center space-y-6 p-10 rounded-3xl border border-border bg-card shadow-card">
-              <QrCode className="w-12 h-12 mx-auto text-primary" />
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Download XanScan Today</h2>
+              <Link2 className="w-12 h-12 mx-auto text-primary" />
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Download LinkVault Today</h2>
               <p className="text-muted-foreground text-lg">
-                The most powerful QR, barcode, OCR and PDF toolkit in your pocket — completely offline.
+                The smartest, most private way to save links, organize bookmarks and bulk-import URLs — fully offline.
               </p>
               <a href={PLAY_URL} target="_blank" rel="noopener noreferrer" className="inline-block">
                 <Button size="lg" className="gradient-primary group">
@@ -287,4 +288,4 @@ const QRScanner = () => {
   );
 };
 
-export default QRScanner;
+export default LinkVault;
