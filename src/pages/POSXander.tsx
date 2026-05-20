@@ -25,6 +25,13 @@ import {
 } from "lucide-react";
 
 const PLAY_URL = "https://play.google.com/store/apps/details?id=com.xantechs.pos_store";
+const APP_ICON = "https://play-lh.googleusercontent.com/gCuGoi79GiTTiEXUSsjfD008lsD0dEZ5a6S40JqxUxorLz09dmv1vvBoOy2tAIO_f4Mdn5nCbtaUL1QL7D4n3Q=w240-h480-rw";
+const SCREENSHOTS = [
+  "https://play-lh.googleusercontent.com/WCjDx_-fwx33I8nOQSv7_81Wuh0wL0jh9KXVNKay0gGtAD08DVyM-cLuy1lnrQGDMzF_hxkdjxBJQUN37QVo=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/-e-p0yGI5r2odP7yXssEpOmuvhCJzqwJuv3EAztKDE1h7QuY2MR6kzsknQxI-WnRU69HS8kyGGeIrxHiN6QL=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/F__ePwl6Lc6d4xTahHTJ71XZ-U5ibWC1G2d-dbIVwGN1SloGd03XMlzGqlW-ve8vibaYH1Gz0fbo0by6N46l=w526-h296-rw",
+  "https://play-lh.googleusercontent.com/2ftYyV0aq0jes1V9YuoumO6z3LIEB5brZN75dcEAhgm9OAZoydX2w6sWxhLj2o2n7JqHzwZT6sfcKikklnmeIQ=w526-h296-rw",
+];
 
 const storyboard = [
   {
