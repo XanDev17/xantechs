@@ -133,13 +133,17 @@ const POSXander = () => {
                 Live on Google Play
               </div>
 
+              <div className="flex justify-center">
+                <img src={APP_ICON} alt="POS Offline app icon" width={88} height={88} className="w-22 h-22 rounded-3xl shadow-glow" />
+              </div>
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-gradient">XanTechs POS</span>
-                <span className="text-foreground"> — Stock & Billing</span>
+                <span className="text-gradient">POS Offline</span>
+                <span className="text-foreground"> — Barcode &amp; Stock</span>
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                The all-in-one point-of-sale and inventory manager built for speed, accuracy, and growth.
+                The all-in-one offline point-of-sale and inventory manager built for speed, accuracy, and growth.
                 From barcode scanning to AI-driven insights — XanTechs POS keeps your shop running, online or off.
               </p>
 
